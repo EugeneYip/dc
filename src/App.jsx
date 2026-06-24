@@ -1109,7 +1109,6 @@ export default function DC2026() {
           <strong>D.C. 2026</strong>
           <span>Responsive bilingual itinerary · 響應式雙語行程</span>
         </div>
-        <span>Return confirmed: Delta DL 5633</span>
       </footer>
     </div>
   );
@@ -1461,7 +1460,7 @@ const styles = `
 
   footer {
     max-width: var(--max); margin: 90px auto 0; padding: 28px 40px 84px;
-    border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px;
+    border-top: 1px solid var(--line); display: flex; gap: 20px;
     color: var(--muted); font-size: .76rem;
   }
   footer strong, footer span { display: block; }
