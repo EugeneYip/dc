@@ -1,694 +1,559 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 /**
- * DC 2026 Travel Infrastructure
- * Single-file React component. No third-party packages required.
- * Default export: DC2026Infrastructure
+ * D.C. 2026
+ * Responsive bilingual travel itinerary.
+ * English is the primary line. Traditional Chinese is the secondary line.
+ * No third-party packages required.
  */
 
-const COLORS = {
-  paper: "#FCFAF2",
-  sumi: "#1C1C1C",
-  ai: "#0F4C5C",
-  aiSoft: "#DDEBEA",
-  beni: "#CB4042",
-  beniSoft: "#F4E1DE",
-  yamabuki: "#FFB11B",
-  yamabukiSoft: "#F8EDCF",
-  hanada: "#006284",
-  hanadaSoft: "#DCECF2",
-  matcha: "#86A697",
-  matchaSoft: "#E5ECE7",
-  nezumi: "#787D7B",
-  shironeri: "#FCFAF2",
-  border: "#D8D2C4",
-  white: "#FFFFFF",
+const MAPS = {
+  loganC: "https://maps.app.goo.gl/ZAD5jzY97FQXXQiD9",
+  hostel: "https://maps.app.goo.gl/QbnSNkEVB7xGxLA67",
+  teaism: "https://maps.app.goo.gl/sKG3LQYGEfaLxyXW8",
+  nga: "https://maps.app.goo.gl/kkXZtoZULe6e9axWA",
+  oldEbbitt: "https://maps.app.goo.gl/NsfkM1p8iVsKgHMT8",
+  jefferson: "https://maps.app.goo.gl/6EdYq4FoGTCVoye89",
+  whiteHouse: "https://maps.app.goo.gl/2SheKfyfhMby4Yu87",
+  washingtonMonument: "https://maps.app.goo.gl/Z8j8Cj55fGEtsPnr9",
+  wwii: "https://maps.app.goo.gl/q9miJLMVuwVSyF4D7",
+  reflectingPool: "https://maps.app.goo.gl/2Kw6NaoRHTJgxPxB7",
+  lincoln: "https://maps.app.goo.gl/1xq6i65gQ1kk7N9B6",
+  vietnam: "https://maps.app.goo.gl/wNYVdZGpJum1EPa67",
+  korean: "https://maps.app.goo.gl/xnmJ5iQ3QsK47Xuu7",
+  marsCafe: "https://maps.app.goo.gl/UdKFKbP9Psf5E5x66",
+  airSpace: "https://maps.app.goo.gl/jXJ7ghNd5GxqjRiz5",
+  loc: "https://maps.app.goo.gl/SM1yBD1T8ci9oPN7A",
+  daikaya: "https://maps.app.goo.gl/2m96QpntsgBbs9QH6",
+  georgetown: "https://maps.app.goo.gl/PAUmnaQ2bmPfF6Ms9",
+  mStreet: "https://maps.app.goo.gl/ine9n9thbZEDH8MC8",
+  waterfront: "https://maps.app.goo.gl/NYvHe4ogQdRaiTck7",
+  waterTaxi: "https://maps.app.goo.gl/6y1wGtJxCuZSe76EA",
+  wharf: "https://maps.app.goo.gl/f8ByZ5mj7thS97VF9",
+  bantamKing: "https://maps.app.goo.gl/Ma3KkMjs529UysY18",
+  dcaT2: "https://maps.app.goo.gl/Ak1smXPiGH3N7vLv9",
 };
 
-const content = {
-  en: {
-    appTitle: "Washington, D.C. 2026",
-    appSubtitle: "A field-ready travel operating guide",
-    dates: "June 24–26, 2026",
-    status: "Departure edition",
-    verified: "Public information checked June 24, 2026",
-    nav: {
-      overview: "Overview",
-      day1: "Day 1",
-      day2: "Day 2",
-      day3: "Day 3",
-      transport: "Transport",
-      packing: "Packing",
-      backup: "Contingencies",
-      sources: "Sources",
-    },
-    hero: {
-      eyebrow: "3 DAYS · 2 NIGHTS · BOSTON TO WASHINGTON",
-      title: "Your complete D.C. operating plan",
-      intro:
-        "This guide turns every reservation, transfer, admission window, meal, and fallback decision into one clear system. Use the timeline during the day and open the detail cards only when needed.",
-      critical: "Critical departure line",
-      criticalText:
-        "Leave Allston at 4:00 AM. Reach Logan Terminal C by 5:00 AM. Be at the gate by about 5:35 AM.",
-    },
-    switcher: {
-      label: "Language",
-      en: "English",
-      zh: "中文",
-      both: "EN + 中文",
-    },
-    overview: {
-      title: "Trip command center",
-      subtitle: "The few facts that control the entire trip",
-      fixed: "Fixed commitments",
-      flexible: "Flexible blocks",
-      risk: "Items to reconfirm",
-      fixedItems: [
-        ["Jun 24 · 6:15 AM", "JetBlue B6 2255 departs BOS"],
-        ["Jun 24 · 5:00 PM", "Old Ebbitt Grill reservation"],
-        ["Jun 25 · 10:00 AM", "Washington Monument ticket"],
-        ["Jun 25 · 2:00 PM", "Air and Space Museum ticket"],
-        ["Jun 25 · 4:30 PM", "Library of Congress ticket"],
-        ["Jun 26 · 3:30 PM", "Georgetown water taxi"],
-        ["Jun 26 · 10:00 PM", "Delta DL 5633 departs DCA"],
-      ],
-      flexibleItems: [
-        "Chinatown and CityCenter walk",
-        "Secondary National Gallery rooms",
-        "One of the Vietnam or Korean War memorials",
-        "M Street shopping",
-        "The Wharf dwell time",
-      ],
-      riskItems: [
-        "Confirm the final return booking. A later planning note mentions Acela 2262 on June 27, while this operating plan uses Delta DL 5633 on June 26.",
-        "Confirm the hostel’s luggage storage, late check-in process, and locker requirements.",
-        "Check airline gates, Metro alerts, water taxi status, and weather on each travel day.",
-      ],
-      metrics: [
-        ["3", "timed-entry tickets"],
-        ["2", "airport transfers"],
-        ["1", "restaurant reservation"],
-        ["10–13 mi", "likely walking on Day 2"],
-      ],
-    },
-    now: {
-      title: "Do these five things before leaving",
-      items: [
-        "Complete JetBlue check-in and save the boarding pass offline.",
-        "Confirm the terminal and gate in the JetBlue app.",
-        "Set alarms for 3:30 AM and 3:40 AM. Request the ride at 4:00 AM.",
-        "Save all three timed-entry QR codes as screenshots.",
-        "Confirm late check-in and luggage storage with the hostel.",
-      ],
-    },
-    flight: {
-      outTitle: "Outbound flight",
-      backTitle: "Return flight",
-      outbound: [
-        ["Flight", "JetBlue B6 2255"],
-        ["Route", "Boston BOS → Washington DCA"],
-        ["Date", "Wednesday, June 24"],
-        ["Schedule", "6:15 AM → 7:57 AM"],
-        ["Aircraft", "Airbus A220-300"],
-        ["Boston terminal", "Terminal C, subject to boarding pass"],
-        ["Airport arrival target", "4:45–5:00 AM"],
-        ["Gate target", "About 5:35 AM"],
-      ],
-      inbound: [
-        ["Flight", "Delta DL 5633"],
-        ["Route", "Washington DCA → Boston BOS"],
-        ["Date", "Friday, June 26"],
-        ["Schedule", "10:00 PM → 11:44 PM"],
-        ["Aircraft", "Embraer 175"],
-        ["DCA terminal", "Terminal 2"],
-        ["Airport arrival target", "8:00–8:15 PM"],
-        ["Gate target", "About 9:20 PM"],
-      ],
-      note:
-        "Airline schedules and gates can change. The boarding pass and airline app are the final authority.",
-    },
-    day1: {
-      date: "Wednesday · June 24",
-      title: "Arrival, art, Old Ebbitt, and the Tidal Basin",
-      theme: "Low-friction arrival day",
-      summary:
-        "The first day protects the 5:00 PM reservation and saves enough energy for Jefferson Memorial at sunset.",
-      timeline: [
-        ["4:00 AM", "Leave Allston", "Rideshare to Logan Terminal C", "fixed"],
-        ["4:45–5:00 AM", "Arrive at BOS", "TSA, refill water, walk to gate", "fixed"],
-        ["6:15–7:57 AM", "JetBlue B6 2255", "BOS to DCA", "fixed"],
-        ["8:20–9:15 AM", "DCA to hostel", "Yellow Line to Mount Vernon Square", "move"],
-        ["9:15–9:35 AM", "Store luggage", "I Street Capsule Hostel", "fixed"],
-        ["9:35–10:40 AM", "Chinatown loop", "Water, coffee, essentials only", "flex"],
-        ["11:00–11:45 AM", "Lunch at Teaism", "400 8th St NW", "meal"],
-        ["12:05–3:45 PM", "National Gallery of Art", "West Building first", "visit"],
-        ["4:45 PM", "Arrive at Old Ebbitt", "Check in 15 minutes early", "fixed"],
-        ["5:00–6:15 PM", "Old Ebbitt Grill", "Reservation for one", "meal"],
-        ["6:15–6:55 PM", "Walk to Jefferson Memorial", "Ellipse and Monument route", "move"],
-        ["6:55–8:20 PM", "Jefferson Memorial", "Tidal Basin at dusk", "visit"],
-        ["8:20–9:00 PM", "Return to hostel", "Rideshare recommended", "move"],
-      ],
-      highlights: [
-        ["Teaism Penn Quarter", "400 8th Street NW", "Lunch begins at 11:00 AM. Do not add a full breakfast beforehand."],
-        ["National Gallery, West Building", "6th St and Constitution Ave NW", "Prioritize Ginevra de’ Benci, The Alba Madonna, Woman Holding a Balance, Young Girl Reading, and the Impressionist galleries."],
-        ["Old Ebbitt Grill", "675 15th Street NW", "Arrive at 4:45 PM. Keep dinner near 75 minutes."],
-        ["Thomas Jefferson Memorial", "16 E Basin Dr SW", "Allow 35–40 minutes to walk from Old Ebbitt. A full Tidal Basin loop is unnecessary."],
-      ],
-      cut: ["Chinatown loop", "Secondary gallery rooms", "Full Tidal Basin loop"],
-      protect: ["Luggage storage and check-in plan", "Old Ebbitt at 5:00 PM"],
-    },
-    day2: {
-      date: "Thursday · June 25",
-      title: "Monuments, museums, and Capitol Hill",
-      theme: "High-density timed-entry day",
-      summary:
-        "This is the most demanding day. The schedule is built backward from three admission windows. Food must remain fast and portable.",
-      timeline: [
-        ["7:00–7:30 AM", "Wake and eat", "Simple hostel breakfast", "meal"],
-        ["7:40 AM", "Leave hostel", "Walk toward Lafayette Square", "fixed"],
-        ["8:10–8:45 AM", "White House", "North-side photographs", "visit"],
-        ["8:45–9:15 AM", "Walk to Washington Monument", "Allow 20–30 minutes", "move"],
-        ["9:15–9:50 AM", "Queue and security", "Open QR code before arrival", "fixed"],
-        ["10:00–10:50 AM", "Washington Monument", "Timed reservation", "fixed"],
-        ["11:05–11:25 AM", "World War II Memorial", "Short focused stop", "visit"],
-        ["11:25 AM–12:00 PM", "Reflecting Pool walk", "Hydrate and photograph", "move"],
-        ["12:00–12:25 PM", "Lincoln Memorial", "Main chamber and steps", "visit"],
-        ["12:25–12:55 PM", "Vietnam and Korean memorials", "Trim one if delayed", "visit"],
-        ["1:15–1:40 PM", "Fast lunch", "Pavilion Café or grab-and-go", "meal"],
-        ["2:00–3:30 PM", "Air and Space Museum", "Timed-entry ticket", "fixed"],
-        ["3:30–3:55 PM", "Walk to Library of Congress", "Do not stop for shopping", "move"],
-        ["3:55–4:25 PM", "Queue and security", "Peak-season buffer", "fixed"],
-        ["4:30–6:40 PM", "Library of Congress", "Timed-entry ticket", "fixed"],
-        ["7:10–8:10 PM", "DAIKAYA", "First-floor ramen shop", "meal"],
-      ],
-      highlights: [
-        ["White House north side", "Lafayette Square, 16th St NW & H St NW", "Security perimeters can change. Use the best available public viewpoint rather than chasing a closer angle."],
-        ["Washington Monument", "2 15th St NW", "Timed entry is required. Arrive 30–45 minutes early for security."],
-        ["National Air and Space Museum", "650 Jefferson Drive SW", "Use the Jefferson Drive entrance. Free timed-entry passes are required. The museum is open 10:00 AM–5:30 PM."],
-        ["Library of Congress", "10 First Street SE", "Thursday visitor hours run to 8:00 PM. Peak visitation from March through July can lengthen security lines."],
-        ["DAIKAYA Ramen Shop", "705 6th St NW", "Use the first floor. The second-floor izakaya does not serve the ramen menu."],
-      ],
-      airspace: [
-        "1903 Wright Flyer",
-        "Apollo 11 Command Module Columbia",
-        "Boeing Milestones of Flight Hall",
-        "Destination Moon",
-        "Mercury Friendship 7 or Spirit of St. Louis if time remains",
-      ],
-      cut: ["Pavilion Café, replace with grab-and-go", "One secondary memorial", "Secondary Air and Space galleries"],
-      protect: ["Washington Monument at 10:00 AM", "Air and Space at 2:00 PM", "Library of Congress at 4:30 PM"],
-    },
-    day3: {
-      date: "Friday · June 26",
-      title: "Georgetown, the Potomac, and departure",
-      theme: "Leisurely morning, strict evening",
-      summary:
-        "The first half is flexible. The second half is controlled by the 3:30 PM boat, luggage pickup, and DCA arrival target.",
-      timeline: [
-        ["8:30–10:15 AM", "Slow morning", "Breakfast, packing, charging", "flex"],
-        ["10:15–11:00 AM", "Check out", "Store luggage at hostel", "fixed"],
-        ["11:00–11:35 AM", "Travel to Georgetown", "Rideshare saves time", "move"],
-        ["11:35 AM–12:20 PM", "M Street and C&O Canal", "Historic commercial core", "visit"],
-        ["12:20–1:20 PM", "Lunch", "M Street or Washington Harbour", "meal"],
-        ["1:20–2:05 PM", "Wisconsin Avenue", "Shops and side streets", "flex"],
-        ["2:05–2:50 PM", "Waterfront Park", "Potomac and Key Bridge views", "visit"],
-        ["2:50–3:10 PM", "Walk to dock", "Move toward Washington Harbour", "move"],
-        ["3:10–3:20 PM", "Water taxi check-in", "Boarding buffer", "fixed"],
-        ["3:30–4:15 PM", "Potomac Water Taxi", "Georgetown to The Wharf", "fixed"],
-        ["4:15–5:15 PM", "The Wharf", "Transit Pier and waterfront", "visit"],
-        ["5:15–5:50 PM", "Return to Chinatown", "Metro or rideshare", "move"],
-        ["5:50–6:35 PM", "Bantam King", "Early dinner", "meal"],
-        ["6:50–7:10 PM", "Collect luggage", "Final repack", "fixed"],
-        ["7:10–7:50 PM", "Travel to DCA", "Yellow Line", "move"],
-        ["8:00–8:15 PM", "Arrive at Terminal 2", "TSA and gate", "fixed"],
-        ["10:00–11:44 PM", "Delta DL 5633", "DCA to BOS", "fixed"],
-      ],
-      highlights: [
-        ["Old Stone House", "3051 M St NW", "A practical starting point for the M Street walk."],
-        ["Georgetown Waterfront Park", "Wisconsin Ave & K St NW", "Use the riverfront path for Potomac and Key Bridge views."],
-        ["Georgetown Dock", "3100 K St NW", "Check in around 3:10 PM for the 3:30 PM one-way sailing."],
-        ["The Wharf Transit Pier", "950 Wharf St SW", "Keep the visit near one hour so dinner and airport timing remain intact."],
-        ["Bantam King", "501 G St NW", "Target 5:50 PM arrival and a 40–45 minute meal."],
-      ],
-      taxi: [
-        ["Departure", "Georgetown · 3:30 PM"],
-        ["Arrival", "The Wharf · 4:15 PM"],
-        ["Fare", "About $25 one way"],
-        ["Check-in", "3:10–3:15 PM"],
-      ],
-      cut: ["M Street shopping", "The Wharf dwell time", "Water taxi if weather or operations fail"],
-      protect: ["Luggage pickup by about 7:10 PM", "DCA arrival by 8:15 PM", "Delta departure at 10:00 PM"],
-    },
-    transport: {
-      title: "Transport system",
-      subtitle: "Use this as the movement layer beneath the daily schedule",
-      routes: [
-        {
-          title: "Allston → Logan",
-          steps: ["4:00 AM rideshare", "Terminal C drop-off", "TSA", "Gate by about 5:35 AM"],
-          note: "Do not rely on the first Green Line and Blue Line connection for a 6:15 AM flight.",
-        },
-        {
-          title: "DCA → Hostel",
-          steps: ["Terminal 2 walkway", "DCA Metro station", "Yellow Line northbound", "Mount Vernon Square", "8–12 minute walk"],
-          note: "Allow 45–60 minutes from aircraft arrival to hostel.",
-        },
-        {
-          title: "Hostel → DCA",
-          steps: ["Walk to Gallery Place", "Yellow Line southbound", "DCA station", "Terminal 2 walkway"],
-          note: "Leave the hostel area around 7:10 PM for an 8:00–8:15 PM airport arrival.",
-        },
-        {
-          title: "Logan → Allston after midnight",
-          steps: ["Massport shuttle", "Airport Blue Line station", "Government Center", "Green Line B"],
-          note: "Check live late-night service immediately after landing. Use rideshare if the rail connection is no longer practical.",
-        },
-      ],
-      hostel: [
-        ["Name", "I Street Capsule Hostel"],
-        ["Address", "512 I St NW, Washington, DC 20001"],
-        ["Metro", "Mount Vernon Square / Gallery Place"],
-        ["Confirm", "Luggage storage, late check-in, access code or key, towel, locker size, and lock requirement"],
-      ],
-    },
-    packing: {
-      title: "Packing and carry-on control",
-      subtitle: "Pack for security, walking, heat, rain, and hostel conditions",
-      categories: [
-        {
-          title: "Identity and reservations",
-          items: ["Passport or REAL ID", "Both boarding passes", "Hostel confirmation", "Three timed-entry QR codes", "Old Ebbitt reservation", "Water taxi ticket", "Offline addresses"],
-        },
-        {
-          title: "Electronics",
-          items: ["Phone", "Charging cable", "Power bank", "Earbuds", "Watch charger", "Offline screenshots"],
-        },
-        {
-          title: "Clothing and hostel",
-          items: ["Two changes of clothes", "Underwear and socks", "Light layer", "Walking shoes", "Sleepwear", "Earplugs", "Eye mask", "Shower sandals", "Small lock", "Small towel"],
-        },
-        {
-          title: "Outdoor and health",
-          items: ["Sunscreen", "Hat", "Compact umbrella or rain shell", "Empty water bottle", "Tissues", "Medication", "Pain relief", "Stomach medicine", "Bandages"],
-        },
-      ],
-      tsa:
-        "Carry-on liquids, gels, and creams must be 3.4 oz / 100 ml or less per container and fit in one quart-size clear bag. Bring the water bottle empty through security.",
-      bag:
-        "To satisfy both airlines, keep the carry-on at or below 22 × 14 × 9 inches. JetBlue’s personal-item limit is 17 × 13 × 8 inches.",
-    },
-    contingencies: {
-      title: "Decision rules when the schedule slips",
-      subtitle: "Protect reservations first. Remove low-value walking and shopping before fixed admissions.",
-      rows: [
-        ["Day 1", "Cut Chinatown, secondary galleries, then the full basin loop", "Protect luggage handling and Old Ebbitt"],
-        ["Day 2", "Replace lunch, cut one memorial, then secondary museum rooms", "Protect all three timed entries"],
-        ["Day 3", "Cut shopping, shorten The Wharf, then replace the boat", "Protect luggage pickup and DCA arrival"],
-      ],
-      weatherTitle: "Weather response",
-      weather: [
-        ["Heat", "Start hydrated, use indoor stops, and shorten exposed memorial walks."],
-        ["Thunderstorms", "Do not wait on an exposed pier. Verify the boat before leaving Georgetown."],
-        ["Heavy rain", "Use rideshare for Jefferson Memorial and replace the waterfront walk with indoor time."],
-        ["Flight disruption", "Use the airline app first. Keep all confirmations and payment cards accessible."],
-      ],
-      returnConflictTitle: "Return-booking conflict",
-      returnConflict:
-        "This source itinerary uses Delta DL 5633 on Friday, June 26. A later planning record mentions Amtrak Acela 2262 from Washington Union Station to Boston South Station on Saturday, June 27. These cannot both be the active return plan. Confirm the ticket in the airline or Amtrak account before relying on Day 3 departure timing.",
-    },
-    sources: {
-      title: "Verification and official references",
-      subtitle: "Operational details should still be checked on the day of travel",
-      items: [
-        ["JetBlue", "Flight status, boarding pass, baggage"],
-        ["Delta", "Return flight status and Boston arrival terminal"],
-        ["Massport", "Logan terminal and shuttle information"],
-        ["WMATA", "Yellow Line status and first/last trains"],
-        ["National Park Service", "Washington Monument and memorial operations"],
-        ["National Gallery of Art", "Hours and visitor information"],
-        ["National Air and Space Museum", "Timed entry, entrance, open galleries"],
-        ["Library of Congress", "Thursday hours, security, Live! entry"],
-        ["City Experiences", "Potomac Water Taxi status and dock instructions"],
-        ["TSA", "Identification and 3-1-1 liquids rule"],
-      ],
-      design:
-        "Interface structure follows responsive React patterns and WCAG 2.2 principles: semantic headings, keyboard-accessible controls, visible focus states, adequate contrast, reduced-motion support, and layouts that reflow without horizontal scrolling.",
-    },
-    checklist: {
-      title: "Live departure checklist",
-      reset: "Reset",
-      completed: "completed",
-      items: [
-        "JetBlue check-in complete",
-        "Terminal and gate confirmed",
-        "Phone fully charged",
-        "Power bank fully charged",
-        "3:30 AM alarms set",
-        "4:00 AM ride planned",
-        "Passport or REAL ID packed",
-        "Liquids follow 3-1-1",
-        "Hostel late check-in confirmed",
-        "Hostel luggage storage confirmed",
-        "Water taxi purchased or fallback accepted",
-        "Return booking reconfirmed",
-      ],
+const DAYS = [
+  {
+    id: "day1",
+    number: "01",
+    dateEn: "WED · JUN 24",
+    dateZh: "星期三 · 6 月 24 日",
+    titleEn: "Arrival, art, and the Tidal Basin",
+    titleZh: "抵達、藝術與 Tidal Basin",
+    accent: "hanada",
+    summaryEn: "Keep the morning light. Protect the 5:00 PM reservation and sunset at Jefferson Memorial.",
+    summaryZh: "上午保持輕鬆，優先保護 5:00 PM 訂位與 Jefferson Memorial 黃昏時段。",
+    items: [
+      {
+        time: "4:00 AM",
+        en: "Leave Allston",
+        zh: "離開 Allston",
+        detailEn: "Rideshare to Logan Terminal C",
+        detailZh: "叫車前往 Logan Terminal C",
+        map: MAPS.loganC,
+        type: "move",
+        fixed: true,
+      },
+      {
+        time: "4:45–5:00",
+        en: "Arrive at BOS",
+        zh: "抵達 BOS",
+        detailEn: "Security, water, gate",
+        detailZh: "安檢、裝水、前往登機門",
+        type: "airport",
+        fixed: true,
+      },
+      {
+        time: "6:15–7:57",
+        en: "JetBlue B6 2255",
+        zh: "JetBlue B6 2255",
+        detailEn: "Boston to Washington National",
+        detailZh: "Boston 前往 Washington National",
+        type: "flight",
+        fixed: true,
+      },
+      {
+        time: "8:20–9:15",
+        en: "DCA to hostel",
+        zh: "DCA 前往 hostel",
+        detailEn: "Yellow Line to Mount Vernon Square",
+        detailZh: "Yellow Line 至 Mount Vernon Square",
+        map: MAPS.hostel,
+        type: "move",
+      },
+      {
+        time: "9:15–9:35",
+        en: "Store luggage",
+        zh: "寄放行李",
+        detailEn: "I Street Capsule Hostel",
+        detailZh: "I Street Capsule Hostel",
+        map: MAPS.hostel,
+        type: "stay",
+        fixed: true,
+      },
+      {
+        time: "9:35–10:40",
+        en: "Chinatown and CityCenter",
+        zh: "Chinatown 與 CityCenter",
+        detailEn: "Water, coffee, or essentials only",
+        detailZh: "只買水、咖啡或日用品",
+        type: "flex",
+      },
+      {
+        time: "11:00–11:45",
+        en: "Teaism Penn Quarter",
+        zh: "Teaism Penn Quarter",
+        detailEn: "Lunch",
+        detailZh: "午餐",
+        map: MAPS.teaism,
+        type: "meal",
+      },
+      {
+        time: "12:05–3:45",
+        en: "National Gallery of Art",
+        zh: "National Gallery of Art",
+        detailEn: "West Building first",
+        detailZh: "先看 West Building",
+        map: MAPS.nga,
+        type: "visit",
+      },
+      {
+        time: "4:45 PM",
+        en: "Arrive at Old Ebbitt",
+        zh: "抵達 Old Ebbitt",
+        detailEn: "Check in 15 minutes early",
+        detailZh: "提早 15 分鐘報到",
+        map: MAPS.oldEbbitt,
+        type: "meal",
+        fixed: true,
+      },
+      {
+        time: "5:00–6:15",
+        en: "Old Ebbitt Grill",
+        zh: "Old Ebbitt Grill",
+        detailEn: "Reservation for one",
+        detailZh: "一人訂位",
+        map: MAPS.oldEbbitt,
+        type: "meal",
+        fixed: true,
+      },
+      {
+        time: "6:15–6:55",
+        en: "Walk to Jefferson Memorial",
+        zh: "步行前往 Jefferson Memorial",
+        detailEn: "Via the Ellipse and Washington Monument",
+        detailZh: "經 Ellipse 與 Washington Monument",
+        map: MAPS.jefferson,
+        type: "move",
+      },
+      {
+        time: "6:55–8:20",
+        en: "Jefferson Memorial and Tidal Basin",
+        zh: "Jefferson Memorial 與 Tidal Basin",
+        detailEn: "Dusk walk. A full loop is unnecessary.",
+        detailZh: "黃昏散步，不必繞完整一圈。",
+        map: MAPS.jefferson,
+        type: "visit",
+      },
+      {
+        time: "8:20–9:00",
+        en: "Return to hostel",
+        zh: "返回 hostel",
+        detailEn: "Rideshare recommended",
+        detailZh: "建議叫車",
+        map: MAPS.hostel,
+        type: "move",
+      },
+    ],
+    priorities: {
+      keepEn: ["Old Ebbitt at 5:00 PM", "Luggage storage and check-in"],
+      keepZh: ["5:00 PM Old Ebbitt 訂位", "行李寄放與入住安排"],
+      cutEn: ["Chinatown walk", "Secondary gallery rooms", "Full Tidal Basin loop"],
+      cutZh: ["Chinatown 散步", "次要展廳", "完整 Tidal Basin 繞行"],
     },
   },
+  {
+    id: "day2",
+    number: "02",
+    dateEn: "THU · JUN 25",
+    dateZh: "星期四 · 6 月 25 日",
+    titleEn: "Monuments, museums, and Capitol Hill",
+    titleZh: "紀念碑、博物館與 Capitol Hill",
+    accent: "beni",
+    summaryEn: "Three timed entries control the day. Keep lunch fast and leave margin for security lines.",
+    summaryZh: "全天由三個預約入場時段控制，午餐要快，並保留安檢緩衝。",
+    items: [
+      {
+        time: "7:00–7:30",
+        en: "Breakfast",
+        zh: "早餐",
+        detailEn: "Simple food at the hostel",
+        detailZh: "在 hostel 簡單用餐",
+        type: "meal",
+      },
+      {
+        time: "7:40 AM",
+        en: "Leave hostel",
+        zh: "離開 hostel",
+        detailEn: "Walk toward Lafayette Square",
+        detailZh: "步行前往 Lafayette Square",
+        type: "move",
+        fixed: true,
+      },
+      {
+        time: "8:10–8:45",
+        en: "White House",
+        zh: "White House",
+        detailEn: "North-side photographs",
+        detailZh: "北側拍照",
+        map: MAPS.whiteHouse,
+        type: "visit",
+      },
+      {
+        time: "8:45–9:15",
+        en: "Walk to Washington Monument",
+        zh: "步行至 Washington Monument",
+        detailEn: "Allow 20–30 minutes",
+        detailZh: "預留 20 至 30 分鐘",
+        map: MAPS.washingtonMonument,
+        type: "move",
+      },
+      {
+        time: "9:15–9:50",
+        en: "Queue and security",
+        zh: "排隊與安檢",
+        detailEn: "Open the QR code before arrival",
+        detailZh: "抵達前先開啟 QR code",
+        type: "security",
+        fixed: true,
+      },
+      {
+        time: "10:00–10:50",
+        en: "Washington Monument",
+        zh: "Washington Monument",
+        detailEn: "Timed reservation",
+        detailZh: "預約入場",
+        map: MAPS.washingtonMonument,
+        type: "visit",
+        fixed: true,
+      },
+      {
+        time: "11:05–11:25",
+        en: "World War II Memorial",
+        zh: "World War II Memorial",
+        detailEn: "Short focused stop",
+        detailZh: "集中參觀",
+        map: MAPS.wwii,
+        type: "visit",
+      },
+      {
+        time: "11:25–12:00",
+        en: "Reflecting Pool",
+        zh: "Reflecting Pool",
+        detailEn: "Walk, photos, and water",
+        detailZh: "步行、拍照、補水",
+        map: MAPS.reflectingPool,
+        type: "move",
+      },
+      {
+        time: "12:00–12:25",
+        en: "Lincoln Memorial",
+        zh: "Lincoln Memorial",
+        detailEn: "Main chamber and steps",
+        detailZh: "主殿與階梯",
+        map: MAPS.lincoln,
+        type: "visit",
+      },
+      {
+        time: "12:25–12:55",
+        en: "Vietnam and Korean War Memorials",
+        zh: "Vietnam 與 Korean War Memorials",
+        detailEn: "Drop one if the schedule slips",
+        detailZh: "若延誤，刪除其中一處",
+        links: [
+          { label: "Vietnam", url: MAPS.vietnam },
+          { label: "Korean", url: MAPS.korean },
+        ],
+        type: "visit",
+      },
+      {
+        time: "1:05–1:35",
+        en: "Mars Café",
+        zh: "Mars Café",
+        detailEn: "Fast lunch or takeaway",
+        detailZh: "快速午餐或外帶",
+        map: MAPS.marsCafe,
+        type: "meal",
+      },
+      {
+        time: "1:35–1:55",
+        en: "Travel to Air and Space",
+        zh: "前往 Air and Space",
+        detailEn: "Use rideshare if timing is tight",
+        detailZh: "時間不足時改叫車",
+        map: MAPS.airSpace,
+        type: "move",
+      },
+      {
+        time: "2:00–3:30",
+        en: "National Air and Space Museum",
+        zh: "National Air and Space Museum",
+        detailEn: "Timed entry",
+        detailZh: "預約入場",
+        map: MAPS.airSpace,
+        type: "visit",
+        fixed: true,
+      },
+      {
+        time: "3:30–3:55",
+        en: "Walk to Library of Congress",
+        zh: "步行至 Library of Congress",
+        detailEn: "Go directly to the visitor entrance",
+        detailZh: "直接前往訪客入口",
+        map: MAPS.loc,
+        type: "move",
+      },
+      {
+        time: "3:55–4:25",
+        en: "Queue and security",
+        zh: "排隊與安檢",
+        detailEn: "Keep the QR code ready",
+        detailZh: "準備好 QR code",
+        type: "security",
+        fixed: true,
+      },
+      {
+        time: "4:30–6:40",
+        en: "Library of Congress",
+        zh: "Library of Congress",
+        detailEn: "Live! at the Library",
+        detailZh: "Live! at the Library",
+        map: MAPS.loc,
+        type: "visit",
+        fixed: true,
+      },
+      {
+        time: "7:10–8:10",
+        en: "DAIKAYA",
+        zh: "DAIKAYA",
+        detailEn: "First-floor ramen shop",
+        detailZh: "一樓拉麵店",
+        map: MAPS.daikaya,
+        type: "meal",
+      },
+    ],
+    priorities: {
+      keepEn: ["Washington Monument at 10:00 AM", "Air and Space at 2:00 PM", "Library of Congress at 4:30 PM"],
+      keepZh: ["10:00 AM Washington Monument", "2:00 PM Air and Space", "4:30 PM Library of Congress"],
+      cutEn: ["Mars Café, replace with takeaway", "One memorial", "Secondary museum galleries"],
+      cutZh: ["Mars Café 改外帶", "刪除一處 Memorial", "刪除次要展廳"],
+    },
+  },
+  {
+    id: "day3",
+    number: "03",
+    dateEn: "FRI · JUN 26",
+    dateZh: "星期五 · 6 月 26 日",
+    titleEn: "Georgetown, the Potomac, and departure",
+    titleZh: "Georgetown、Potomac 與回程",
+    accent: "matcha",
+    summaryEn: "The morning is flexible. The 3:30 PM boat, luggage pickup, and airport arrival are not.",
+    summaryZh: "上午可彈性調整，3:30 PM 船班、取行李與抵達機場時間不可延誤。",
+    items: [
+      {
+        time: "8:30–10:15",
+        en: "Slow morning",
+        zh: "慢起",
+        detailEn: "Breakfast, packing, charging",
+        detailZh: "早餐、整理、充電",
+        type: "flex",
+      },
+      {
+        time: "10:15–11:00",
+        en: "Check out and store luggage",
+        zh: "退房及寄放行李",
+        detailEn: "I Street Capsule Hostel",
+        detailZh: "I Street Capsule Hostel",
+        map: MAPS.hostel,
+        type: "stay",
+        fixed: true,
+      },
+      {
+        time: "11:00–11:35",
+        en: "Travel to Georgetown",
+        zh: "前往 Georgetown",
+        detailEn: "Rideshare is simplest",
+        detailZh: "叫車最直接",
+        map: MAPS.georgetown,
+        type: "move",
+      },
+      {
+        time: "11:35–12:20",
+        en: "M Street and C&O Canal",
+        zh: "M Street 與 C&O Canal",
+        detailEn: "Historic streets and canal",
+        detailZh: "歷史街區與運河",
+        map: MAPS.mStreet,
+        type: "visit",
+      },
+      {
+        time: "12:20–1:20",
+        en: "Lunch",
+        zh: "午餐",
+        detailEn: "M Street or Washington Harbour",
+        detailZh: "M Street 或 Washington Harbour",
+        type: "meal",
+      },
+      {
+        time: "1:20–2:05",
+        en: "Wisconsin Avenue",
+        zh: "Wisconsin Avenue",
+        detailEn: "Shops and side streets",
+        detailZh: "商店與巷弄",
+        type: "flex",
+      },
+      {
+        time: "2:05–2:50",
+        en: "Georgetown Waterfront Park",
+        zh: "Georgetown Waterfront Park",
+        detailEn: "Potomac and Key Bridge views",
+        detailZh: "Potomac 與 Key Bridge 景色",
+        map: MAPS.waterfront,
+        type: "visit",
+      },
+      {
+        time: "2:50–3:10",
+        en: "Walk to the dock",
+        zh: "步行前往碼頭",
+        detailEn: "Move toward Washington Harbour",
+        detailZh: "前往 Washington Harbour",
+        map: MAPS.waterTaxi,
+        type: "move",
+      },
+      {
+        time: "3:10–3:20",
+        en: "Water taxi check-in",
+        zh: "水上計程船報到",
+        detailEn: "Be ready before boarding begins",
+        detailZh: "登船前完成報到",
+        map: MAPS.waterTaxi,
+        type: "security",
+        fixed: true,
+      },
+      {
+        time: "3:30–4:15",
+        en: "Potomac Water Taxi",
+        zh: "Potomac Water Taxi",
+        detailEn: "Georgetown to The Wharf",
+        detailZh: "Georgetown 前往 The Wharf",
+        map: MAPS.waterTaxi,
+        type: "boat",
+        fixed: true,
+      },
+      {
+        time: "4:15–5:15",
+        en: "The Wharf",
+        zh: "The Wharf",
+        detailEn: "Transit Pier and waterfront",
+        detailZh: "Transit Pier 與水岸",
+        map: MAPS.wharf,
+        type: "visit",
+      },
+      {
+        time: "5:15–5:50",
+        en: "Return to Chinatown",
+        zh: "返回 Chinatown",
+        detailEn: "Metro or rideshare",
+        detailZh: "Metro 或叫車",
+        type: "move",
+      },
+      {
+        time: "5:50–6:35",
+        en: "Bantam King",
+        zh: "Bantam King",
+        detailEn: "Early dinner",
+        detailZh: "提早晚餐",
+        map: MAPS.bantamKing,
+        type: "meal",
+      },
+      {
+        time: "6:50–7:10",
+        en: "Collect luggage",
+        zh: "領取行李",
+        detailEn: "Final repack",
+        detailZh: "最後整理",
+        map: MAPS.hostel,
+        type: "stay",
+        fixed: true,
+      },
+      {
+        time: "7:10–7:50",
+        en: "Travel to DCA",
+        zh: "前往 DCA",
+        detailEn: "Yellow Line to Terminal 2",
+        detailZh: "Yellow Line 前往 Terminal 2",
+        map: MAPS.dcaT2,
+        type: "move",
+      },
+      {
+        time: "8:00–8:15",
+        en: "Arrive at DCA Terminal 2",
+        zh: "抵達 DCA Terminal 2",
+        detailEn: "Security and gate",
+        detailZh: "安檢及前往登機門",
+        map: MAPS.dcaT2,
+        type: "airport",
+        fixed: true,
+      },
+      {
+        time: "10:00–11:44",
+        en: "Delta DL 5633",
+        zh: "Delta DL 5633",
+        detailEn: "Washington to Boston",
+        detailZh: "Washington 前往 Boston",
+        type: "flight",
+        fixed: true,
+      },
+    ],
+    priorities: {
+      keepEn: ["Water taxi check-in by 3:20 PM", "Luggage pickup by 7:10 PM", "DCA by 8:15 PM"],
+      keepZh: ["3:20 PM 前完成船班報到", "7:10 PM 前取行李", "8:15 PM 前抵達 DCA"],
+      cutEn: ["M Street shopping", "Shorten The Wharf", "Replace the boat if weather disrupts service"],
+      cutZh: ["刪除 M Street 購物", "縮短 The Wharf 停留", "天氣異常時改走陸路"],
+    },
+  },
+];
 
-  zh: {
-    appTitle: "Washington, D.C. 2026",
-    appSubtitle: "可直接執行的華府旅行系統",
-    dates: "2026 年 6 月 24 日至 26 日",
-    status: "出發執行版",
-    verified: "公共資訊核對日期：2026 年 6 月 24 日",
-    nav: {
-      overview: "總覽",
-      day1: "第一天",
-      day2: "第二天",
-      day3: "第三天",
-      transport: "交通",
-      packing: "行李",
-      backup: "延誤備案",
-      sources: "資料來源",
-    },
-    hero: {
-      eyebrow: "3 天 · 2 夜 · 波士頓至華盛頓",
-      title: "完整華府行程執行系統",
-      intro:
-        "本指南將訂位、交通、入場時段、餐飲與延誤處理整合成同一套系統。白天先看時間軸，需要時再展開細節。",
-      critical: "最重要的出發時間",
-      criticalText:
-        "凌晨 4:00 從 Allston 出發，5:00 前抵達 Logan Terminal C，約 5:35 前抵達登機門。",
-    },
-    switcher: {
-      label: "語言",
-      en: "English",
-      zh: "中文",
-      both: "中英同步",
-    },
-    overview: {
-      title: "行程控制中心",
-      subtitle: "整趟旅程最重要的固定條件",
-      fixed: "固定行程",
-      flexible: "可調整項目",
-      risk: "出發前需重新確認",
-      fixedItems: [
-        ["6/24 · 6:15 AM", "JetBlue B6 2255 自 BOS 起飛"],
-        ["6/24 · 5:00 PM", "Old Ebbitt Grill 訂位"],
-        ["6/25 · 10:00 AM", "Washington Monument 票券"],
-        ["6/25 · 2:00 PM", "Air and Space Museum 票券"],
-        ["6/25 · 4:30 PM", "Library of Congress 票券"],
-        ["6/26 · 3:30 PM", "Georgetown 水上計程船"],
-        ["6/26 · 10:00 PM", "Delta DL 5633 自 DCA 起飛"],
-      ],
-      flexibleItems: [
-        "Chinatown 與 CityCenter 散步",
-        "National Gallery 次要展廳",
-        "Vietnam 或 Korean War Memorial 其中一處",
-        "M Street 購物",
-        "The Wharf 停留時間",
-      ],
-      riskItems: [
-        "確認最終回程訂位。較新的規劃紀錄提及 6 月 27 日 Acela 2262，但本執行版仍使用 6 月 26 日 Delta DL 5633。",
-        "確認 hostel 的行李寄放、late check-in 與置物櫃規則。",
-        "每日重新確認登機門、Metro 通告、水上計程船及天氣。",
-      ],
-      metrics: [
-        ["3", "張預約入場票券"],
-        ["2", "次機場轉乘"],
-        ["1", "筆餐廳訂位"],
-        ["10–13 英里", "第二天可能步行距離"],
-      ],
-    },
-    now: {
-      title: "出門前先完成五件事",
-      items: [
-        "完成 JetBlue check-in，並離線儲存登機證。",
-        "在 JetBlue App 確認航廈與登機門。",
-        "設定 3:30 與 3:40 AM 鬧鐘，4:00 AM 叫車。",
-        "將三張預約入場 QR code 截圖保存。",
-        "向 hostel 確認 late check-in 與行李寄放。",
-      ],
-    },
-    flight: {
-      outTitle: "去程航班",
-      backTitle: "回程航班",
-      outbound: [
-        ["航班", "JetBlue B6 2255"],
-        ["航線", "Boston BOS → Washington DCA"],
-        ["日期", "6 月 24 日，星期三"],
-        ["時間", "6:15 AM → 7:57 AM"],
-        ["機型", "Airbus A220-300"],
-        ["Boston 航廈", "Terminal C，以登機證為準"],
-        ["抵達機場目標", "4:45–5:00 AM"],
-        ["抵達登機門目標", "約 5:35 AM"],
-      ],
-      inbound: [
-        ["航班", "Delta DL 5633"],
-        ["航線", "Washington DCA → Boston BOS"],
-        ["日期", "6 月 26 日，星期五"],
-        ["時間", "10:00 PM → 11:44 PM"],
-        ["機型", "Embraer 175"],
-        ["DCA 航廈", "Terminal 2"],
-        ["抵達機場目標", "8:00–8:15 PM"],
-        ["抵達登機門目標", "約 9:20 PM"],
-      ],
-      note:
-        "航班時間與登機門可能調整，最終以登機證及航空公司 App 為準。",
-    },
-    day1: {
-      date: "星期三 · 6 月 24 日",
-      title: "抵達、藝術、Old Ebbitt 與 Tidal Basin",
-      theme: "低負擔抵達日",
-      summary:
-        "第一天以保護 5:00 PM 訂位及晚間 Jefferson Memorial 體力為主。",
-      timeline: [
-        ["4:00 AM", "離開 Allston", "叫車前往 Logan Terminal C", "fixed"],
-        ["4:45–5:00 AM", "抵達 BOS", "安檢、裝水、前往登機門", "fixed"],
-        ["6:15–7:57 AM", "JetBlue B6 2255", "BOS 前往 DCA", "fixed"],
-        ["8:20–9:15 AM", "DCA 前往 hostel", "Yellow Line 至 Mount Vernon Square", "move"],
-        ["9:15–9:35 AM", "寄放行李", "I Street Capsule Hostel", "fixed"],
-        ["9:35–10:40 AM", "Chinatown 小迴圈", "僅買水、咖啡及日用品", "flex"],
-        ["11:00–11:45 AM", "Teaism 午餐", "400 8th St NW", "meal"],
-        ["12:05–3:45 PM", "National Gallery of Art", "先看 West Building", "visit"],
-        ["4:45 PM", "抵達 Old Ebbitt", "提早 15 分鐘報到", "fixed"],
-        ["5:00–6:15 PM", "Old Ebbitt Grill", "一人訂位", "meal"],
-        ["6:15–6:55 PM", "步行至 Jefferson Memorial", "經 Ellipse 與紀念碑", "move"],
-        ["6:55–8:20 PM", "Jefferson Memorial", "黃昏 Tidal Basin", "visit"],
-        ["8:20–9:00 PM", "返回 hostel", "建議叫車", "move"],
-      ],
-      highlights: [
-        ["Teaism Penn Quarter", "400 8th Street NW", "午餐 11:00 AM 開始，之前不必再安排正式早餐。"],
-        ["National Gallery, West Building", "6th St and Constitution Ave NW", "優先看 Ginevra de’ Benci、The Alba Madonna、Woman Holding a Balance、Young Girl Reading 及印象派展廳。"],
-        ["Old Ebbitt Grill", "675 15th Street NW", "4:45 PM 報到，用餐控制在約 75 分鐘。"],
-        ["Thomas Jefferson Memorial", "16 E Basin Dr SW", "Old Ebbitt 步行過去預留 35 至 40 分鐘，不必繞完整個 Tidal Basin。"],
-      ],
-      cut: ["Chinatown 小迴圈", "次要展廳", "完整 Tidal Basin 繞行"],
-      protect: ["行李寄放與入住安排", "5:00 PM Old Ebbitt 訂位"],
-    },
-    day2: {
-      date: "星期四 · 6 月 25 日",
-      title: "紀念碑、博物館與 Capitol Hill",
-      theme: "高密度預約入場日",
-      summary:
-        "這是最緊湊的一天。時間表由三個入場時段反推，午餐必須快速並保有替代方案。",
-      timeline: [
-        ["7:00–7:30 AM", "起床及早餐", "Hostel 簡單用餐", "meal"],
-        ["7:40 AM", "離開 hostel", "步行前往 Lafayette Square", "fixed"],
-        ["8:10–8:45 AM", "White House", "北側拍照", "visit"],
-        ["8:45–9:15 AM", "步行至 Washington Monument", "預留 20 至 30 分鐘", "move"],
-        ["9:15–9:50 AM", "排隊與安檢", "抵達前先開啟 QR code", "fixed"],
-        ["10:00–10:50 AM", "Washington Monument", "預約入場", "fixed"],
-        ["11:05–11:25 AM", "World War II Memorial", "集中參觀", "visit"],
-        ["11:25 AM–12:00 PM", "Reflecting Pool", "拍照及補水", "move"],
-        ["12:00–12:25 PM", "Lincoln Memorial", "主殿與階梯", "visit"],
-        ["12:25–12:55 PM", "Vietnam 與 Korean Memorial", "延誤時刪除一處", "visit"],
-        ["1:15–1:40 PM", "快速午餐", "Pavilion Café 或外帶", "meal"],
-        ["2:00–3:30 PM", "Air and Space Museum", "預約入場", "fixed"],
-        ["3:30–3:55 PM", "步行至 Library of Congress", "途中不要停留購物", "move"],
-        ["3:55–4:25 PM", "排隊與安檢", "旺季緩衝", "fixed"],
-        ["4:30–6:40 PM", "Library of Congress", "預約入場", "fixed"],
-        ["7:10–8:10 PM", "DAIKAYA", "一樓拉麵店", "meal"],
-      ],
-      highlights: [
-        ["White House 北側", "Lafayette Square, 16th St NW & H St NW", "安全封鎖範圍可能調整，以當日可公開抵達的最佳視角為準。"],
-        ["Washington Monument", "2 15th St NW", "必須持預約票券，建議提早 30 至 45 分鐘抵達安檢。"],
-        ["National Air and Space Museum", "650 Jefferson Drive SW", "由 Jefferson Drive 入口進入，免費但必須預約。博物館開放時間為 10:00 AM 至 5:30 PM。"],
-        ["Library of Congress", "10 First Street SE", "星期四開放至 8:00 PM。3 月至 7 月為旺季，安檢可能較久。"],
-        ["DAIKAYA Ramen Shop", "705 6th St NW", "前往一樓。二樓 Izakaya 不提供拉麵菜單。"],
-      ],
-      airspace: [
-        "1903 Wright Flyer",
-        "Apollo 11 Command Module Columbia",
-        "Boeing Milestones of Flight Hall",
-        "Destination Moon",
-        "若有時間再看 Mercury Friendship 7 或 Spirit of St. Louis",
-      ],
-      cut: ["取消 Pavilion Café，改成外帶", "刪除一處次要 Memorial", "刪除 Air and Space 次要展廳"],
-      protect: ["10:00 AM Washington Monument", "2:00 PM Air and Space", "4:30 PM Library of Congress"],
-    },
-    day3: {
-      date: "星期五 · 6 月 26 日",
-      title: "Georgetown、Potomac 與回程",
-      theme: "上午放鬆，晚間嚴格控時",
-      summary:
-        "前半天可以彈性調整，後半天則由 3:30 PM 船班、取行李及抵達 DCA 的時間控制。",
-      timeline: [
-        ["8:30–10:15 AM", "慢起", "早餐、整理、充電", "flex"],
-        ["10:15–11:00 AM", "Check-out", "在 hostel 寄放行李", "fixed"],
-        ["11:00–11:35 AM", "前往 Georgetown", "叫車最省時", "move"],
-        ["11:35 AM–12:20 PM", "M Street 與 C&O Canal", "歷史商業區", "visit"],
-        ["12:20–1:20 PM", "午餐", "M Street 或 Washington Harbour", "meal"],
-        ["1:20–2:05 PM", "Wisconsin Avenue", "商店與巷弄", "flex"],
-        ["2:05–2:50 PM", "Waterfront Park", "Potomac 與 Key Bridge 景色", "visit"],
-        ["2:50–3:10 PM", "前往碼頭", "開始往 Washington Harbour 移動", "move"],
-        ["3:10–3:20 PM", "水上計程船報到", "保留登船時間", "fixed"],
-        ["3:30–4:15 PM", "Potomac Water Taxi", "Georgetown 前往 The Wharf", "fixed"],
-        ["4:15–5:15 PM", "The Wharf", "Transit Pier 與水岸", "visit"],
-        ["5:15–5:50 PM", "返回 Chinatown", "Metro 或叫車", "move"],
-        ["5:50–6:35 PM", "Bantam King", "提早晚餐", "meal"],
-        ["6:50–7:10 PM", "領取行李", "最後重新整理", "fixed"],
-        ["7:10–7:50 PM", "前往 DCA", "Yellow Line", "move"],
-        ["8:00–8:15 PM", "抵達 Terminal 2", "安檢及找登機門", "fixed"],
-        ["10:00–11:44 PM", "Delta DL 5633", "DCA 前往 BOS", "fixed"],
-      ],
-      highlights: [
-        ["Old Stone House", "3051 M St NW", "適合作為 M Street 散步起點。"],
-        ["Georgetown Waterfront Park", "Wisconsin Ave & K St NW", "沿河步道可看 Potomac 與 Key Bridge。"],
-        ["Georgetown Dock", "3100 K St NW", "3:30 PM 船班建議 3:10 PM 左右報到。"],
-        ["The Wharf Transit Pier", "950 Wharf St SW", "停留約一小時，避免壓縮晚餐與機場時間。"],
-        ["Bantam King", "501 G St NW", "目標 5:50 PM 抵達，用餐 40 至 45 分鐘。"],
-      ],
-      taxi: [
-        ["出發", "Georgetown · 3:30 PM"],
-        ["抵達", "The Wharf · 4:15 PM"],
-        ["票價", "單程約 $25"],
-        ["報到", "3:10–3:15 PM"],
-      ],
-      cut: ["M Street 購物", "縮短 The Wharf 停留", "天氣或營運異常時取消船班"],
-      protect: ["約 7:10 PM 前完成取行李", "8:15 PM 前抵達 DCA", "10:00 PM Delta 起飛"],
-    },
-    transport: {
-      title: "交通系統",
-      subtitle: "配合每日時間表使用的移動層",
-      routes: [
-        {
-          title: "Allston → Logan",
-          steps: ["4:00 AM 叫車", "Terminal C 下車", "TSA 安檢", "約 5:35 AM 前抵達登機門"],
-          note: "6:15 AM 航班不建議依賴 Green Line 與 Blue Line 的首班轉乘。",
-        },
-        {
-          title: "DCA → Hostel",
-          steps: ["Terminal 2 天橋", "DCA Metro 站", "Yellow Line 北向", "Mount Vernon Square", "步行 8 至 12 分鐘"],
-          note: "自航班抵達至 hostel 共預留 45 至 60 分鐘。",
-        },
-        {
-          title: "Hostel → DCA",
-          steps: ["步行至 Gallery Place", "Yellow Line 南向", "DCA Metro 站", "Terminal 2 天橋"],
-          note: "約 7:10 PM 離開 hostel 區域，目標 8:00 至 8:15 PM 抵達機場。",
-        },
-        {
-          title: "深夜 Logan → Allston",
-          steps: ["Massport 接駁車", "Airport Blue Line 站", "Government Center", "Green Line B"],
-          note: "落地後立即確認末班車。若轉乘已不實際，直接叫車。",
-        },
-      ],
-      hostel: [
-        ["名稱", "I Street Capsule Hostel"],
-        ["地址", "512 I St NW, Washington, DC 20001"],
-        ["鄰近 Metro", "Mount Vernon Square / Gallery Place"],
-        ["需確認", "行李寄放、late check-in、門禁方式、毛巾、置物櫃大小及是否需自備鎖"],
-      ],
-    },
-    packing: {
-      title: "行李與隨身物品",
-      subtitle: "依安檢、長距離步行、炎熱、降雨及 hostel 情境準備",
-      categories: [
-        {
-          title: "證件與訂位",
-          items: ["Passport 或 REAL ID", "兩段登機證", "Hostel 確認信", "三張預約入場 QR code", "Old Ebbitt 訂位", "水上計程船票", "離線地址"],
-        },
-        {
-          title: "電子用品",
-          items: ["手機", "充電線", "Power bank", "耳機", "手錶充電器", "離線截圖"],
-        },
-        {
-          title: "衣物與住宿",
-          items: ["兩套換洗衣物", "內衣襪", "薄外套", "步行鞋", "睡衣", "耳塞", "眼罩", "浴室拖鞋", "小鎖", "小毛巾"],
-        },
-        {
-          title: "戶外與健康",
-          items: ["防曬", "帽子", "小雨傘或雨衣", "空水瓶", "面紙", "個人藥物", "止痛藥", "腸胃藥", "OK 繃"],
-        },
-      ],
-      tsa:
-        "隨身行李中的液體、膠狀物及乳霜，每瓶不得超過 3.4 oz／100 ml，並放入一個 quart-size 透明袋。水瓶需空瓶通過安檢。",
-      bag:
-        "為同時符合兩家航空公司，carry-on 應控制在 22 × 14 × 9 inches 內。JetBlue personal item 上限為 17 × 13 × 8 inches。",
-    },
-    contingencies: {
-      title: "行程延誤時的決策規則",
-      subtitle: "先保護訂位與預約入場，先刪除低價值散步與購物。",
-      rows: [
-        ["第一天", "先刪 Chinatown、次要展廳，再刪完整 Tidal Basin 繞行", "保護行李安排與 Old Ebbitt"],
-        ["第二天", "午餐改外帶、刪一處 Memorial，再刪次要展廳", "保護三個預約入場時段"],
-        ["第三天", "先刪購物、縮短 The Wharf，再以陸路取代船班", "保護取行李與抵達 DCA"],
-      ],
-      weatherTitle: "天氣處理",
-      weather: [
-        ["高溫", "先補水，增加室內停留，縮短曝曬的 Memorial 步行。"],
-        ["雷雨", "不要在碼頭暴露等待，離開 Georgetown 前先確認船班。"],
-        ["大雨", "Jefferson Memorial 改叫車，水岸散步改成室內行程。"],
-        ["航班異常", "先使用航空公司 App，將所有確認信及付款卡放在容易取得的位置。"],
-      ],
-      returnConflictTitle: "回程訂位衝突",
-      returnConflict:
-        "本原始行程使用 6 月 26 日星期五 Delta DL 5633。較新的規劃紀錄則提及 6 月 27 日星期六由 Washington Union Station 前往 Boston South Station 的 Amtrak Acela 2262。兩者不可能同時是有效回程。出發前必須登入航空公司或 Amtrak 帳戶確認。",
-    },
-    sources: {
-      title: "核對與官方資料",
-      subtitle: "所有營運資訊仍應於當日再次確認",
-      items: [
-        ["JetBlue", "航班狀態、登機證、行李"],
-        ["Delta", "回程航班及 Boston 抵達航廈"],
-        ["Massport", "Logan 航廈與接駁車"],
-        ["WMATA", "Yellow Line 狀態及首末班車"],
-        ["National Park Service", "Washington Monument 與 Memorial 營運"],
-        ["National Gallery of Art", "開放時間與參觀資訊"],
-        ["National Air and Space Museum", "預約入場、入口及開放展廳"],
-        ["Library of Congress", "星期四開放時間、安檢與 Live! 入場"],
-        ["City Experiences", "Potomac Water Taxi 船班及碼頭"],
-        ["TSA", "身分證件與 3-1-1 液體規則"],
-      ],
-      design:
-        "介面依響應式 React 與 WCAG 2.2 原則設計，包含語意化標題、鍵盤操作、清楚的 focus 狀態、足夠對比、減少動態效果支援，以及不產生水平捲動的自動重排。",
-    },
-    checklist: {
-      title: "即時出發檢查表",
-      reset: "重設",
-      completed: "已完成",
-      items: [
-        "JetBlue check-in 完成",
-        "航廈與登機門已確認",
-        "手機已充滿",
-        "Power bank 已充滿",
-        "3:30 AM 鬧鐘已設定",
-        "4:00 AM 叫車安排完成",
-        "Passport 或 REAL ID 已放入隨身包",
-        "液體符合 3-1-1",
-        "Hostel late check-in 已確認",
-        "Hostel 行李寄放已確認",
-        "水上計程船已購票或接受備案",
-        "最終回程訂位已重新確認",
-      ],
-    },
-  },
+const TYPE_META = {
+  move: ["Move", "移動"],
+  airport: ["Airport", "機場"],
+  flight: ["Flight", "航班"],
+  stay: ["Stay", "住宿"],
+  flex: ["Flexible", "彈性"],
+  meal: ["Meal", "餐飲"],
+  visit: ["Visit", "參觀"],
+  security: ["Check-in", "報到"],
+  boat: ["Boat", "船班"],
 };
 
-const NAV_KEYS = ["overview", "day1", "day2", "day3", "transport", "packing", "backup", "sources"];
+const CHECKLIST = [
+  ["JetBlue check-in complete", "JetBlue check-in 完成"],
+  ["Terminal and gate confirmed", "航廈與登機門已確認"],
+  ["Phone and power bank charged", "手機與 power bank 已充滿"],
+  ["3:30 AM alarms set", "3:30 AM 鬧鐘已設定"],
+  ["4:00 AM ride arranged", "4:00 AM 叫車已安排"],
+  ["Passport or REAL ID packed", "Passport 或 REAL ID 已放入隨身包"],
+  ["Three QR codes saved offline", "三張 QR code 已離線保存"],
+  ["Hostel late check-in confirmed", "Hostel late check-in 已確認"],
+  ["Hostel luggage storage confirmed", "Hostel 行李寄放已確認"],
+  ["Water taxi ticket ready", "水上計程船票已準備"],
+  ["Final return booking reconfirmed", "最終回程訂位已重新確認"],
+];
 
-function Icon({ name, size = 20 }) {
-  const common = {
+function Icon({ name, size = 18 }) {
+  const base = {
     width: size,
     height: size,
     viewBox: "0 0 24 24",
@@ -699,281 +564,500 @@ function Icon({ name, size = 20 }) {
     strokeLinejoin: "round",
     "aria-hidden": true,
   };
+
   const paths = {
-    plane: <><path d="M22 2 9.6 14.4"/><path d="m15 2-4 4-7-1-2 2 6 3-3 3-3-.5-1.5 1.5 4.5 2 2 4.5 1.5-1.5-.5-3 3-3 3 6 2-2-1-7 4-4Z"/></>,
     map: <><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></>,
     clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
-    bag: <><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/></>,
-    alert: <><path d="M12 3 2.5 20h19Z"/><path d="M12 9v4M12 17h.01"/></>,
-    check: <path d="m5 12 4 4L19 6"/>,
+    plane: <><path d="M22 2 9.5 14.5"/><path d="m15 2-4 4-7-1-2 2 6 3-3 3-3-.5L.5 14l4.5 2 2 4.5 1.5-1.5-.5-3 3-3 3 6 2-2-1-7 4-4Z"/></>,
     train: <><rect x="5" y="3" width="14" height="15" rx="2"/><path d="M8 21l2-3m6 3-2-3M8 7h8M8 12h.01M16 12h.01"/></>,
     food: <><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/></>,
     museum: <><path d="m3 9 9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18"/></>,
-    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></>,
-    link: <><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></>,
+    bed: <><path d="M3 18V8M3 14h18v4M6 10h5a3 3 0 0 1 3 3v1M6 10V7h4a3 3 0 0 1 3 3"/></>,
+    check: <path d="m5 12 4 4L19 6"/>,
+    external: <><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6H5V6h6"/></>,
     menu: <><path d="M4 7h16M4 12h16M4 17h16"/></>,
     close: <><path d="m6 6 12 12M18 6 6 18"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/></>,
+    shield: <><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6Z"/><path d="m9 12 2 2 4-5"/></>,
+    boat: <><path d="M4 13 6 8h12l2 5"/><path d="M2 15c2 2 4 2 6 0 2 2 4 2 6 0 2 2 4 2 8 0"/><path d="M12 8V3l4 2-4 2"/></>,
+    bag: <><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/></>,
   };
-  return <svg {...common}>{paths[name] || paths.map}</svg>;
+
+  return <svg {...base}>{paths[name] || paths.map}</svg>;
 }
 
-function usePersistedChecklist() {
-  const [checked, setChecked] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("dc2026-checklist") || "{}");
-    } catch {
-      return {};
-    }
-  });
-  useEffect(() => {
-    try {
-      localStorage.setItem("dc2026-checklist", JSON.stringify(checked));
-    } catch {}
-  }, [checked]);
-  return [checked, setChecked];
-}
-
-function Bilingual({ mode, en, zh, className = "" }) {
-  if (mode === "en") return <span className={className}>{en}</span>;
-  if (mode === "zh") return <span className={className}>{zh}</span>;
+function BilingualText({ en, zh, className = "" }) {
   return (
-    <span className={`bilingual ${className}`}>
-      <span>{en}</span>
-      <span lang="zh-Hant">{zh}</span>
+    <span className={`bi ${className}`}>
+      <span className="en">{en}</span>
+      <span className="zh" lang="zh-Hant">{zh}</span>
     </span>
   );
 }
 
-function SectionHeading({ icon, eyebrow, title, subtitle }) {
+function MapButton({ href, label = "Open in Google Maps", compact = false }) {
+  if (!href) return null;
   return (
-    <header className="section-heading">
-      <div className="section-icon"><Icon name={icon} size={22} /></div>
-      <div>
-        {eyebrow && <div className="eyebrow">{eyebrow}</div>}
-        <h2>{title}</h2>
-        {subtitle && <p>{subtitle}</p>}
+    <a
+      className={`map-button ${compact ? "compact" : ""}`}
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+    >
+      <Icon name="map" size={compact ? 15 : 17} />
+      {!compact && <BilingualText en="Google Maps" zh="開啟地圖" />}
+      <Icon name="external" size={compact ? 13 : 15} />
+    </a>
+  );
+}
+
+function TypeIcon({ type }) {
+  const icon = {
+    move: "train",
+    airport: "shield",
+    flight: "plane",
+    stay: "bed",
+    flex: "sun",
+    meal: "food",
+    visit: "museum",
+    security: "shield",
+    boat: "boat",
+  }[type] || "clock";
+
+  return <Icon name={icon} size={17} />;
+}
+
+function useChecklist() {
+  const [checked, setChecked] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("dc2026-v2-checklist") || "{}");
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("dc2026-v2-checklist", JSON.stringify(checked));
+    } catch {}
+  }, [checked]);
+
+  return [checked, setChecked];
+}
+
+function TimelineItem({ item }) {
+  const [typeEn, typeZh] = TYPE_META[item.type] || ["Item", "項目"];
+
+  return (
+    <article className={`timeline-item type-${item.type}`}>
+      <div className="time-cell">
+        <time>{item.time}</time>
+        {item.fixed && <span className="fixed-dot" title="Fixed time" />}
       </div>
-    </header>
-  );
-}
 
-function DataTable({ rows }) {
-  return (
-    <div className="data-table">
-      {rows.map(([k, v], i) => (
-        <div className="data-row" key={`${k}-${i}`}>
-          <div className="data-key">{k}</div>
-          <div className="data-value">{v}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
+      <div className="timeline-rail">
+        <div className="timeline-icon"><TypeIcon type={item.type} /></div>
+      </div>
 
-function Timeline({ items }) {
-  const typeIcon = { fixed: "clock", move: "train", meal: "food", visit: "museum", flex: "sun" };
-  return (
-    <div className="timeline">
-      {items.map(([time, title, detail, type], i) => (
-        <article className={`timeline-item type-${type}`} key={`${time}-${i}`}>
-          <div className="timeline-time">{time}</div>
-          <div className="timeline-marker"><Icon name={typeIcon[type] || "clock"} size={16} /></div>
-          <div className="timeline-content">
-            <h4>{title}</h4>
-            <p>{detail}</p>
+      <div className="timeline-card">
+        <div className="timeline-main">
+          <div>
+            <div className="type-label">
+              <BilingualText en={typeEn} zh={typeZh} />
+              {item.fixed && <span className="fixed-badge">FIXED · 固定</span>}
+            </div>
+            <h3>{item.en}</h3>
+            <p lang="zh-Hant">{item.zh}</p>
           </div>
-        </article>
-      ))}
-    </div>
-  );
-}
 
-function RouteDiagram({ lang }) {
-  const labels = lang === "zh"
-    ? ["Allston", "BOS", "DCA", "Hostel", "National Mall", "Georgetown", "The Wharf", "DCA"]
-    : ["Allston", "BOS", "DCA", "Hostel", "National Mall", "Georgetown", "The Wharf", "DCA"];
-  return (
-    <div className="route-diagram" role="img" aria-label="Trip route schematic">
-      <svg viewBox="0 0 900 180" preserveAspectRatio="xMidYMid meet">
-        <path className="route-line" d="M55 95 C130 25, 190 25, 260 95 S390 165, 455 95 S590 25, 650 95 S780 165, 845 95" />
-        {labels.map((label, i) => {
-          const x = 55 + i * 113;
-          const y = i % 2 === 0 ? 95 : i === 1 ? 54 : i === 3 ? 136 : i === 5 ? 54 : 136;
-          return (
-            <g key={label + i}>
-              <circle className={i === 0 || i === labels.length - 1 ? "route-node endpoint" : "route-node"} cx={x} cy={y} r="9" />
-              <text x={x} y={y + (i % 2 === 0 ? 28 : i === 1 || i === 5 ? -18 : 28)} textAnchor="middle">{label}</text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
-
-function DaySection({ id, data, accent }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <section id={id} className="page-section day-section">
-      <div className="day-banner" style={{ "--accent": accent }}>
-        <div>
-          <div className="eyebrow">{data.date}</div>
-          <h2>{data.title}</h2>
-          <p>{data.summary}</p>
-        </div>
-        <div className="theme-pill">{data.theme}</div>
-      </div>
-
-      <div className="day-layout">
-        <div className="card timeline-card">
-          <h3><Icon name="clock" size={19} /> Daily timeline</h3>
-          <Timeline items={data.timeline} />
-        </div>
-
-        <aside className="day-side">
-          {data.taxi && (
-            <div className="card">
-              <h3><Icon name="map" size={19} /> Water taxi</h3>
-              <DataTable rows={data.taxi} />
-            </div>
-          )}
-          {data.airspace && (
-            <div className="card">
-              <h3><Icon name="museum" size={19} /> 90-minute priority</h3>
-              <ol className="number-list">
-                {data.airspace.map((x) => <li key={x}>{x}</li>)}
-              </ol>
-            </div>
-          )}
-          <div className="card decision-card">
-            <h3><Icon name="alert" size={19} /> Delay logic</h3>
-            <div className="decision-block">
-              <strong>Cut first</strong>
-              <ul>{data.cut.map(x => <li key={x}>{x}</li>)}</ul>
-            </div>
-            <div className="decision-block protect">
-              <strong>Protect</strong>
-              <ul>{data.protect.map(x => <li key={x}>{x}</li>)}</ul>
-            </div>
+          <div className="timeline-actions">
+            {item.map && <MapButton href={item.map} compact />}
+            {item.links?.map((link) => (
+              <a
+                key={link.label}
+                className="mini-map"
+                href={link.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {link.label}
+                <Icon name="external" size={12} />
+              </a>
+            ))}
           </div>
-        </aside>
+        </div>
+
+        <div className="timeline-detail">
+          <span>{item.detailEn}</span>
+          <span lang="zh-Hant">{item.detailZh}</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function PriorityPanel({ priorities }) {
+  return (
+    <div className="priority-panel">
+      <div className="priority-box keep">
+        <div className="priority-kicker">PROTECT · 必須保留</div>
+        <ul>
+          {priorities.keepEn.map((item, i) => (
+            <li key={item}>
+              <BilingualText en={item} zh={priorities.keepZh[i]} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="priority-box cut">
+        <div className="priority-kicker">CUT FIRST · 優先刪除</div>
+        <ul>
+          {priorities.cutEn.map((item, i) => (
+            <li key={item}>
+              <BilingualText en={item} zh={priorities.cutZh[i]} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function DaySection({ day }) {
+  const [showAll, setShowAll] = useState(true);
+  const visibleItems = showAll ? day.items : day.items.filter((item) => item.fixed);
+
+  return (
+    <section id={day.id} className={`day-section accent-${day.accent}`}>
+      <div className="day-header">
+        <div className="day-number">{day.number}</div>
+        <div className="day-heading">
+          <div className="date-line">
+            <span>{day.dateEn}</span>
+            <span lang="zh-Hant">{day.dateZh}</span>
+          </div>
+          <h2>{day.titleEn}</h2>
+          <p className="day-title-zh" lang="zh-Hant">{day.titleZh}</p>
+          <div className="day-summary">
+            <span>{day.summaryEn}</span>
+            <span lang="zh-Hant">{day.summaryZh}</span>
+          </div>
+        </div>
+        <button className="filter-button" onClick={() => setShowAll(!showAll)}>
+          <Icon name="clock" />
+          <BilingualText
+            en={showAll ? "Fixed only" : "Show full day"}
+            zh={showAll ? "只看固定行程" : "顯示完整行程"}
+          />
+        </button>
       </div>
 
-      <button className="detail-toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
-        <span>{open ? "Hide location details" : "Open location details"}</span>
-        <span aria-hidden="true">{open ? "−" : "+"}</span>
-      </button>
-      {open && (
-        <div className="location-grid">
-          {data.highlights.map(([name, address, note]) => (
-            <article className="location-card" key={name}>
-              <h3>{name}</h3>
-              <address>{address}</address>
-              <p>{note}</p>
-            </article>
+      <div className="day-body">
+        <div className="timeline">
+          {visibleItems.map((item, i) => (
+            <TimelineItem item={item} key={`${item.time}-${item.en}-${i}`} />
           ))}
         </div>
-      )}
+
+        <aside className="day-sidebar">
+          <PriorityPanel priorities={day.priorities} />
+        </aside>
+      </div>
     </section>
   );
 }
 
-export default function DC2026Infrastructure() {
-  const [lang, setLang] = useState("en");
-  const [active, setActive] = useState("overview");
+function Checklist() {
+  const [checked, setChecked] = useChecklist();
+  const count = useMemo(
+    () => CHECKLIST.reduce((n, _, i) => n + (checked[i] ? 1 : 0), 0),
+    [checked]
+  );
+  const percent = Math.round((count / CHECKLIST.length) * 100);
+
+  return (
+    <section id="checklist" className="checklist-section">
+      <div className="section-title">
+        <div className="section-index">04</div>
+        <div>
+          <h2>Departure checklist</h2>
+          <p lang="zh-Hant">出發檢查表</p>
+        </div>
+      </div>
+
+      <div className="checklist-card">
+        <div className="checklist-top">
+          <div>
+            <strong>{count}/{CHECKLIST.length}</strong>
+            <span>completed · 已完成</span>
+          </div>
+          <button onClick={() => setChecked({})}>Reset · 重設</button>
+        </div>
+
+        <div className="progress" aria-label={`${percent}% complete`}>
+          <span style={{ width: `${percent}%` }} />
+        </div>
+
+        <div className="checklist-grid">
+          {CHECKLIST.map(([en, zh], i) => (
+            <label className={checked[i] ? "checked" : ""} key={en}>
+              <input
+                type="checkbox"
+                checked={!!checked[i]}
+                onChange={() => setChecked({ ...checked, [i]: !checked[i] })}
+              />
+              <span className="check-box"><Icon name="check" size={14} /></span>
+              <BilingualText en={en} zh={zh} />
+            </label>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TransportStrip() {
+  const cards = [
+    {
+      titleEn: "Outbound",
+      titleZh: "去程",
+      icon: "plane",
+      main: "JetBlue B6 2255",
+      subEn: "BOS 6:15 AM → DCA 7:57 AM",
+      subZh: "6 月 24 日",
+      map: MAPS.loganC,
+    },
+    {
+      titleEn: "Stay",
+      titleZh: "住宿",
+      icon: "bed",
+      main: "I Street Capsule Hostel",
+      subEn: "512 I St NW",
+      subZh: "寄放行李與 late check-in 須確認",
+      map: MAPS.hostel,
+    },
+    {
+      titleEn: "Return",
+      titleZh: "回程",
+      icon: "plane",
+      main: "Delta DL 5633",
+      subEn: "DCA 10:00 PM → BOS 11:44 PM",
+      subZh: "6 月 26 日",
+      map: MAPS.dcaT2,
+    },
+  ];
+
+  return (
+    <section className="transport-strip" id="overview">
+      {cards.map((card) => (
+        <article className="transport-card" key={card.titleEn}>
+          <div className="transport-icon"><Icon name={card.icon} size={20} /></div>
+          <div>
+            <div className="transport-label">
+              <span>{card.titleEn}</span>
+              <span lang="zh-Hant">{card.titleZh}</span>
+            </div>
+            <strong>{card.main}</strong>
+            <div className="transport-sub">
+              <span>{card.subEn}</span>
+              <span lang="zh-Hant">{card.subZh}</span>
+            </div>
+          </div>
+          <MapButton href={card.map} compact />
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function QuickFacts() {
+  const facts = [
+    ["3", "timed entries", "個預約入場"],
+    ["1", "restaurant reservation", "筆餐廳訂位"],
+    ["3:30 PM", "water taxi", "水上計程船"],
+    ["8:15 PM", "DCA target", "抵達 DCA 目標"],
+  ];
+
+  return (
+    <section className="quick-facts">
+      {facts.map(([value, en, zh]) => (
+        <article key={value + en}>
+          <strong>{value}</strong>
+          <BilingualText en={en} zh={zh} />
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function PackingSection() {
+  const blocks = [
+    {
+      icon: "shield",
+      titleEn: "Documents",
+      titleZh: "證件與訂位",
+      items: [
+        ["Passport or REAL ID", "Passport 或 REAL ID"],
+        ["Both boarding passes", "兩段登機證"],
+        ["Three QR codes", "三張預約入場 QR code"],
+        ["Hostel confirmation", "Hostel 確認信"],
+        ["Restaurant and water taxi confirmations", "餐廳及船票確認"],
+      ],
+    },
+    {
+      icon: "bag",
+      titleEn: "Daily bag",
+      titleZh: "每日隨身包",
+      items: [
+        ["Phone and power bank", "手機與 power bank"],
+        ["Water bottle", "水瓶"],
+        ["Sunscreen", "防曬"],
+        ["Compact rain gear", "輕便雨具"],
+        ["Personal medication", "個人藥物"],
+      ],
+    },
+    {
+      icon: "bed",
+      titleEn: "Hostel",
+      titleZh: "Hostel",
+      items: [
+        ["Earplugs and eye mask", "耳塞與眼罩"],
+        ["Shower sandals", "浴室拖鞋"],
+        ["Small lock", "小鎖"],
+        ["Small towel", "小毛巾"],
+        ["Two changes of clothes", "兩套換洗衣物"],
+      ],
+    },
+  ];
+
+  return (
+    <section id="packing" className="packing-section">
+      <div className="section-title">
+        <div className="section-index">05</div>
+        <div>
+          <h2>Pack only what serves the trip</h2>
+          <p lang="zh-Hant">只攜帶真正需要的物品</p>
+        </div>
+      </div>
+
+      <div className="packing-grid">
+        {blocks.map((block) => (
+          <article key={block.titleEn}>
+            <div className="packing-icon"><Icon name={block.icon} /></div>
+            <h3>{block.titleEn}</h3>
+            <p lang="zh-Hant">{block.titleZh}</p>
+            <ul>
+              {block.items.map(([en, zh]) => (
+                <li key={en}><BilingualText en={en} zh={zh} /></li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <div className="rules-row">
+        <div>
+          <strong>TSA 3-1-1</strong>
+          <BilingualText
+            en="Liquids must be 3.4 oz / 100 ml or less per container."
+            zh="每瓶液體不得超過 3.4 oz／100 ml。"
+          />
+        </div>
+        <div>
+          <strong>Carry-on</strong>
+          <BilingualText
+            en="Keep the bag within 22 × 14 × 9 inches."
+            zh="行李尺寸控制在 22 × 14 × 9 inches 內。"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReturnAlert() {
+  return (
+    <section className="return-alert">
+      <div className="alert-icon"><Icon name="shield" size={24} /></div>
+      <div>
+        <strong>Reconfirm the final return booking</strong>
+        <span lang="zh-Hant">重新確認最終回程訂位</span>
+        <p>
+          This itinerary uses Delta DL 5633 on June 26. A later planning record mentions Acela 2262 on June 27.
+        </p>
+        <p lang="zh-Hant">
+          本行程使用 6 月 26 日 Delta DL 5633，但較新的規劃紀錄提及 6 月 27 日 Acela 2262。出發前必須確認哪一張票仍有效。
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export default function DC2026() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [checked, setChecked] = usePersistedChecklist();
-
-  const t = content[lang === "both" ? "en" : lang];
-  const z = content.zh;
-  const isBoth = lang === "both";
-
-  const tx = (path) => {
-    const keys = path.split(".");
-    const get = (obj) => keys.reduce((acc, k) => acc?.[k], obj);
-    const en = get(content.en);
-    const zh = get(content.zh);
-    if (isBoth) return <Bilingual mode="both" en={en} zh={zh} />;
-    return get(t);
-  };
+  const [active, setActive] = useState("overview");
 
   useEffect(() => {
-    const handler = () => {
-      const y = window.scrollY + 160;
+    const ids = ["overview", "day1", "day2", "day3", "checklist", "packing"];
+    const onScroll = () => {
+      const point = window.scrollY + 150;
       let current = "overview";
-      NAV_KEYS.forEach((id) => {
+      ids.forEach((id) => {
         const el = document.getElementById(id);
-        if (el && el.offsetTop <= y) current = id;
+        if (el && el.offsetTop <= point) current = id;
       });
       setActive(current);
     };
-    handler();
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const checklistItems = isBoth
-    ? content.en.checklist.items.map((x, i) => `${x}｜${content.zh.checklist.items[i]}`)
-    : t.checklist.items;
-
-  const completed = useMemo(
-    () => checklistItems.reduce((n, _, i) => n + (checked[i] ? 1 : 0), 0),
-    [checked, checklistItems]
-  );
-
-  const dayData = (key) => {
-    if (!isBoth) return t[key];
-    const en = content.en[key];
-    const zh = content.zh[key];
-    return {
-      date: `${en.date}｜${zh.date}`,
-      title: `${en.title}｜${zh.title}`,
-      theme: `${en.theme}｜${zh.theme}`,
-      summary: `${en.summary}\n${zh.summary}`,
-      timeline: en.timeline.map((row, i) => [
-        row[0],
-        `${row[1]}｜${zh.timeline[i][1]}`,
-        `${row[2]}｜${zh.timeline[i][2]}`,
-        row[3],
-      ]),
-      highlights: en.highlights.map((row, i) => [
-        row[0],
-        row[1],
-        `${row[2]}\n${zh.highlights[i][2]}`,
-      ]),
-      cut: en.cut.map((x, i) => `${x}｜${zh.cut[i]}`),
-      protect: en.protect.map((x, i) => `${x}｜${zh.protect[i]}`),
-      airspace: en.airspace?.map((x, i) => `${x}｜${zh.airspace[i]}`),
-      taxi: en.taxi?.map((row, i) => [`${row[0]}｜${zh.taxi[i][0]}`, `${row[1]}｜${zh.taxi[i][1]}`]),
-    };
-  };
+  const nav = [
+    ["overview", "Overview", "總覽"],
+    ["day1", "Day 1", "第一天"],
+    ["day2", "Day 2", "第二天"],
+    ["day3", "Day 3", "第三天"],
+    ["checklist", "Checklist", "檢查表"],
+    ["packing", "Packing", "行李"],
+  ];
 
   return (
-    <div className={`app lang-${lang}`}>
+    <div className="app">
       <style>{styles}</style>
 
-      <a className="skip-link" href="#overview">Skip to content</a>
+      <a className="skip-link" href="#overview">Skip to itinerary</a>
 
       <header className="topbar">
-        <div className="brand">
-          <div className="brand-mark">DC</div>
-          <div>
-            <strong>{tx("appTitle")}</strong>
-            <span>{tx("appSubtitle")}</span>
-          </div>
-        </div>
-        <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
-          <Icon name={menuOpen ? "close" : "menu"} />
+        <a className="brand" href="#overview" aria-label="D.C. 2026 home">
+          <span className="brand-mark">DC</span>
+          <span className="brand-copy">
+            <strong>D.C. 2026</strong>
+            <small>JUN 24–26 · 3 DAYS</small>
+          </span>
+        </a>
+
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+        >
+          <Icon name={menuOpen ? "close" : "menu"} size={22} />
         </button>
+
         <nav className={menuOpen ? "nav open" : "nav"} aria-label="Primary navigation">
-          {NAV_KEYS.map((key) => (
+          {nav.map(([id, en, zh]) => (
             <a
-              href={`#${key}`}
-              key={key}
-              className={active === key ? "active" : ""}
+              key={id}
+              href={`#${id}`}
+              className={active === id ? "active" : ""}
               onClick={() => setMenuOpen(false)}
             >
-              {tx(`nav.${key}`)}
+              <span>{en}</span>
+              <span lang="zh-Hant">{zh}</span>
             </a>
           ))}
         </nav>
@@ -981,260 +1065,71 @@ export default function DC2026Infrastructure() {
 
       <main>
         <section className="hero">
-          <div className="hero-copy">
-            <div className="eyebrow">{tx("hero.eyebrow")}</div>
-            <h1>{tx("hero.title")}</h1>
-            <p className="hero-intro">{tx("hero.intro")}</p>
-            <div className="hero-meta">
-              <span>{tx("dates")}</span>
-              <span>{tx("status")}</span>
-              <span>{tx("verified")}</span>
+          <div className="hero-left">
+            <div className="hero-kicker">WASHINGTON, D.C. · 2026</div>
+            <h1>D.C. 2026</h1>
+            <p className="hero-zh" lang="zh-Hant">華盛頓三天兩夜</p>
+
+            <div className="hero-date">
+              <span>JUNE 24–26</span>
+              <span>WED–FRI</span>
+              <span>BOSTON → D.C.</span>
             </div>
-            <div className="critical-line">
-              <Icon name="alert" size={24} />
+
+            <div className="departure-callout">
+              <Icon name="clock" size={22} />
               <div>
-                <strong>{tx("hero.critical")}</strong>
-                <p>{tx("hero.criticalText")}</p>
+                <strong>4:00 AM departure</strong>
+                <span lang="zh-Hant">凌晨 4:00 從 Allston 出發</span>
               </div>
             </div>
           </div>
 
-          <div className="hero-visual">
-            <div className="monument-art" aria-hidden="true">
-              <div className="sun-disc" />
-              <div className="obelisk"><span /></div>
-              <div className="basin-line" />
-              <div className="city-label">WASHINGTON<br />DISTRICT OF COLUMBIA</div>
+          <div className="hero-art" aria-hidden="true">
+            <div className="hero-sun" />
+            <div className="hero-obelisk" />
+            <div className="hero-water" />
+            <div className="hero-stamp">
+              <span>WASHINGTON</span>
+              <strong>DC</strong>
+              <span>2026</span>
             </div>
           </div>
         </section>
 
-        <section id="overview" className="page-section">
-          <SectionHeading icon="map" title={tx("overview.title")} subtitle={tx("overview.subtitle")} />
-          <RouteDiagram lang={lang} />
+        <TransportStrip />
+        <QuickFacts />
+        <ReturnAlert />
 
-          <div className="metric-grid">
-            {(isBoth ? content.en.overview.metrics : t.overview.metrics).map(([value, label], i) => (
-              <div className="metric-card" key={value}>
-                <strong>{value}</strong>
-                <span>{isBoth ? `${label}｜${z.overview.metrics[i][1]}` : label}</span>
-              </div>
-            ))}
-          </div>
+        {DAYS.map((day) => (
+          <DaySection day={day} key={day.id} />
+        ))}
 
-          <div className="overview-grid">
-            <article className="card fixed-card">
-              <h3><Icon name="clock" size={20} /> {tx("overview.fixed")}</h3>
-              <div className="commitment-list">
-                {(isBoth ? content.en.overview.fixedItems : t.overview.fixedItems).map(([time, item], i) => (
-                  <div className="commitment" key={time}>
-                    <time>{time}</time>
-                    <span>{isBoth ? `${item}｜${z.overview.fixedItems[i][1]}` : item}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="card">
-              <h3><Icon name="sun" size={20} /> {tx("overview.flexible")}</h3>
-              <ul className="clean-list">
-                {(isBoth ? content.en.overview.flexibleItems : t.overview.flexibleItems).map((x, i) => (
-                  <li key={x}>{isBoth ? `${x}｜${z.overview.flexibleItems[i]}` : x}</li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="card alert-card">
-              <h3><Icon name="alert" size={20} /> {tx("overview.risk")}</h3>
-              <ul className="clean-list">
-                {(isBoth ? content.en.overview.riskItems : t.overview.riskItems).map((x, i) => (
-                  <li key={x}>{isBoth ? `${x}\n${z.overview.riskItems[i]}` : x}</li>
-                ))}
-              </ul>
-            </article>
-          </div>
-
-          <div className="card now-card">
-            <div>
-              <h3>{tx("now.title")}</h3>
-              <ol className="number-list">
-                {(isBoth ? content.en.now.items : t.now.items).map((x, i) => (
-                  <li key={x}>{isBoth ? `${x}｜${z.now.items[i]}` : x}</li>
-                ))}
-              </ol>
-            </div>
-            <Checklist
-              title={tx("checklist.title")}
-              items={checklistItems}
-              checked={checked}
-              setChecked={setChecked}
-              completed={completed}
-              completedLabel={tx("checklist.completed")}
-              resetLabel={tx("checklist.reset")}
-            />
-          </div>
-        </section>
-
-        <section className="page-section flight-section">
-          <SectionHeading icon="plane" title={isBoth ? "Flight control｜航班控制" : lang === "zh" ? "航班控制" : "Flight control"} subtitle={tx("flight.note")} />
-          <div className="flight-grid">
-            <article className="card">
-              <div className="flight-label outbound"><Icon name="plane" /> {tx("flight.outTitle")}</div>
-              <DataTable rows={isBoth ? content.en.flight.outbound.map((r, i) => [`${r[0]}｜${z.flight.outbound[i][0]}`, `${r[1]}｜${z.flight.outbound[i][1]}`]) : t.flight.outbound} />
-            </article>
-            <article className="card">
-              <div className="flight-label inbound"><Icon name="plane" /> {tx("flight.backTitle")}</div>
-              <DataTable rows={isBoth ? content.en.flight.inbound.map((r, i) => [`${r[0]}｜${z.flight.inbound[i][0]}`, `${r[1]}｜${z.flight.inbound[i][1]}`]) : t.flight.inbound} />
-            </article>
-          </div>
-        </section>
-
-        <DaySection id="day1" data={dayData("day1")} accent={COLORS.hanada} />
-        <DaySection id="day2" data={dayData("day2")} accent={COLORS.beni} />
-        <DaySection id="day3" data={dayData("day3")} accent={COLORS.matcha} />
-
-        <section id="transport" className="page-section">
-          <SectionHeading icon="train" title={tx("transport.title")} subtitle={tx("transport.subtitle")} />
-          <div className="route-grid">
-            {(isBoth ? content.en.transport.routes : t.transport.routes).map((route, i) => {
-              const zr = z.transport.routes[i];
-              return (
-                <article className="route-card" key={route.title}>
-                  <h3>{isBoth ? `${route.title}｜${zr.title}` : route.title}</h3>
-                  <div className="step-chain">
-                    {route.steps.map((step, j) => (
-                      <React.Fragment key={step}>
-                        <span>{isBoth ? `${step}｜${zr.steps[j]}` : step}</span>
-                        {j < route.steps.length - 1 && <b aria-hidden="true">›</b>}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                  <p>{isBoth ? `${route.note}\n${zr.note}` : route.note}</p>
-                </article>
-              );
-            })}
-          </div>
-          <div className="card hostel-card">
-            <h3><Icon name="bag" size={20} /> Hostel</h3>
-            <DataTable rows={isBoth ? content.en.transport.hostel.map((r, i) => [`${r[0]}｜${z.transport.hostel[i][0]}`, `${r[1]}｜${z.transport.hostel[i][1]}`]) : t.transport.hostel} />
-          </div>
-        </section>
-
-        <section id="packing" className="page-section">
-          <SectionHeading icon="bag" title={tx("packing.title")} subtitle={tx("packing.subtitle")} />
-          <div className="packing-grid">
-            {(isBoth ? content.en.packing.categories : t.packing.categories).map((cat, i) => {
-              const zc = z.packing.categories[i];
-              return (
-                <article className="packing-card" key={cat.title}>
-                  <h3>{isBoth ? `${cat.title}｜${zc.title}` : cat.title}</h3>
-                  <ul>
-                    {cat.items.map((item, j) => <li key={item}>{isBoth ? `${item}｜${zc.items[j]}` : item}</li>)}
-                  </ul>
-                </article>
-              );
-            })}
-          </div>
-          <div className="rule-grid">
-            <div className="rule-card"><strong>TSA 3-1-1</strong><p>{tx("packing.tsa")}</p></div>
-            <div className="rule-card"><strong>Bag size</strong><p>{tx("packing.bag")}</p></div>
-          </div>
-        </section>
-
-        <section id="backup" className="page-section">
-          <SectionHeading icon="alert" title={tx("contingencies.title")} subtitle={tx("contingencies.subtitle")} />
-          <div className="priority-table">
-            {(isBoth ? content.en.contingencies.rows : t.contingencies.rows).map((row, i) => (
-              <div className="priority-row" key={row[0]}>
-                <strong>{isBoth ? `${row[0]}｜${z.contingencies.rows[i][0]}` : row[0]}</strong>
-                <span>{isBoth ? `${row[1]}｜${z.contingencies.rows[i][1]}` : row[1]}</span>
-                <span>{isBoth ? `${row[2]}｜${z.contingencies.rows[i][2]}` : row[2]}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="weather-grid">
-            <article className="card">
-              <h3><Icon name="sun" size={20} /> {tx("contingencies.weatherTitle")}</h3>
-              {(isBoth ? content.en.contingencies.weather : t.contingencies.weather).map(([condition, action], i) => (
-                <div className="weather-row" key={condition}>
-                  <strong>{isBoth ? `${condition}｜${z.contingencies.weather[i][0]}` : condition}</strong>
-                  <p>{isBoth ? `${action}\n${z.contingencies.weather[i][1]}` : action}</p>
-                </div>
-              ))}
-            </article>
-            <article className="card conflict-card">
-              <h3><Icon name="alert" size={20} /> {tx("contingencies.returnConflictTitle")}</h3>
-              <p>{tx("contingencies.returnConflict")}</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="sources" className="page-section source-section">
-          <SectionHeading icon="link" title={tx("sources.title")} subtitle={tx("sources.subtitle")} />
-          <div className="source-grid">
-            {(isBoth ? content.en.sources.items : t.sources.items).map(([name, purpose], i) => (
-              <div className="source-item" key={name}>
-                <strong>{name}</strong>
-                <span>{isBoth ? `${purpose}｜${z.sources.items[i][1]}` : purpose}</span>
-              </div>
-            ))}
-          </div>
-          <p className="design-note">{tx("sources.design")}</p>
-        </section>
+        <Checklist />
+        <PackingSection />
       </main>
 
-      <div className="language-dock" role="group" aria-label={content.en.switcher.label}>
-        {[
-          ["en", "EN"],
-          ["zh", "中"],
-          ["both", "EN + 中"],
-        ].map(([value, label]) => (
-          <button
-            key={value}
-            className={lang === value ? "active" : ""}
-            onClick={() => setLang(value)}
-            aria-pressed={lang === value}
-            title={value === "en" ? content.en.switcher.en : value === "zh" ? content.zh.switcher.zh : content.en.switcher.both}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <a
+        className="floating-map"
+        href={MAPS.hostel}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Open hostel in Google Maps"
+      >
+        <Icon name="map" size={21} />
+        <span>
+          <strong>Hostel</strong>
+          <small>Google Maps</small>
+        </span>
+      </a>
 
       <footer>
-        <strong>DC 2026</strong>
-        <span>Built for use on desktop, tablet, and phone.</span>
-      </footer>
-    </div>
-  );
-}
-
-function Checklist({ title, items, checked, setChecked, completed, completedLabel, resetLabel }) {
-  const percent = Math.round((completed / items.length) * 100);
-  return (
-    <div className="checklist-panel">
-      <div className="checklist-header">
         <div>
-          <h3>{title}</h3>
-          <span>{completed}/{items.length} {completedLabel}</span>
+          <strong>D.C. 2026</strong>
+          <span>Responsive bilingual itinerary · 響應式雙語行程</span>
         </div>
-        <button onClick={() => setChecked({})}>{resetLabel}</button>
-      </div>
-      <div className="progress" aria-label={`${percent}% complete`}><span style={{ width: `${percent}%` }} /></div>
-      <div className="check-items">
-        {items.map((item, i) => (
-          <label key={item}>
-            <input
-              type="checkbox"
-              checked={!!checked[i]}
-              onChange={() => setChecked({ ...checked, [i]: !checked[i] })}
-            />
-            <span className="custom-check"><Icon name="check" size={14} /></span>
-            <span>{item}</span>
-          </label>
-        ))}
-      </div>
+        <span>Updated June 24, 2026</span>
+      </footer>
     </div>
   );
 }
@@ -1242,365 +1137,439 @@ function Checklist({ title, items, checked, setChecked, completed, completedLabe
 const styles = `
   :root {
     color-scheme: light;
-    --paper: ${COLORS.paper};
-    --ink: ${COLORS.sumi};
-    --ai: ${COLORS.ai};
-    --ai-soft: ${COLORS.aiSoft};
-    --beni: ${COLORS.beni};
-    --beni-soft: ${COLORS.beniSoft};
-    --yamabuki: ${COLORS.yamabuki};
-    --yamabuki-soft: ${COLORS.yamabukiSoft};
-    --hanada: ${COLORS.hanada};
-    --hanada-soft: ${COLORS.hanadaSoft};
-    --matcha: ${COLORS.matcha};
-    --matcha-soft: ${COLORS.matchaSoft};
-    --muted: ${COLORS.nezumi};
-    --border: ${COLORS.border};
-    --white: ${COLORS.white};
-    --shadow: 0 16px 42px rgba(40, 36, 28, .08);
-    --radius: 20px;
+    --paper: #FCFAF2;
+    --ink: #1C1C1C;
+    --muted: #6A6D6B;
+    --line: #D8D2C4;
+    --white: #FFFFFF;
+    --hanada: #006284;
+    --hanada-soft: #DDECF1;
+    --beni: #CB4042;
+    --beni-soft: #F4E1DE;
+    --matcha: #86A697;
+    --matcha-soft: #E6ECE8;
+    --yamabuki: #FFB11B;
+    --yamabuki-soft: #F7EBCB;
+    --ai: #0F4C5C;
+    --shadow: 0 18px 50px rgba(43, 39, 31, .08);
     --max: 1240px;
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 86px; }
-  body { margin: 0; background: var(--paper); color: var(--ink); }
-  button, input { font: inherit; }
+  html { scroll-behavior: smooth; scroll-padding-top: 82px; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
+  }
   a { color: inherit; }
-  address { font-style: normal; }
-  p { line-height: 1.65; }
-  h1, h2, h3, h4, p { margin-top: 0; }
+  button, input { font: inherit; }
+  h1, h2, h3, p { margin-top: 0; }
   .app {
     min-height: 100vh;
     background:
-      radial-gradient(circle at 8% 10%, rgba(255,177,27,.10), transparent 24rem),
+      radial-gradient(circle at 8% 3%, rgba(255,177,27,.11), transparent 24rem),
       linear-gradient(var(--paper), var(--paper));
-    font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
   }
-  .lang-zh, .lang-both {
-    font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", ui-sans-serif, sans-serif;
-  }
-  .bilingual { display: inline-flex; flex-direction: column; gap: .18em; }
-  .bilingual > span:last-child { color: #555; font-size: .88em; }
+  .bi { display: inline-flex; flex-direction: column; gap: .14rem; }
+  .bi .en { line-height: 1.32; }
+  .bi .zh { color: var(--muted); font-size: .88em; line-height: 1.38; }
   .skip-link {
-    position: fixed; top: -50px; left: 16px; z-index: 9999;
-    padding: 10px 14px; background: var(--ink); color: white; border-radius: 8px;
+    position: fixed; left: 12px; top: -60px; z-index: 9999;
+    background: var(--ink); color: white; padding: 10px 14px; border-radius: 10px;
   }
-  .skip-link:focus { top: 10px; }
+  .skip-link:focus { top: 12px; }
 
   .topbar {
     position: sticky; top: 0; z-index: 1000;
-    min-height: 72px; padding: 10px clamp(16px, 4vw, 48px);
+    height: 72px; padding: 0 clamp(16px, 4vw, 46px);
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    background: rgba(252,250,242,.92);
+    background: rgba(252,250,242,.93);
     backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(216,210,196,.85);
+    border-bottom: 1px solid rgba(216,210,196,.8);
   }
-  .brand { display: flex; align-items: center; gap: 12px; min-width: max-content; }
+  .brand {
+    display: flex; align-items: center; gap: 11px; text-decoration: none; min-width: max-content;
+  }
   .brand-mark {
-    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-    background: var(--ai); color: white; font-weight: 800; letter-spacing: .04em;
+    width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center;
+    color: white; background: var(--ai); font-weight: 900; letter-spacing: .06em;
   }
-  .brand strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; }
-  .brand span { display: block; color: var(--muted); font-size: .72rem; margin-top: 2px; }
+  .brand-copy strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; }
+  .brand-copy small { display: block; color: var(--muted); font-size: .64rem; font-weight: 750; letter-spacing: .08em; margin-top: 2px; }
+
   .nav { display: flex; gap: 4px; align-items: center; }
   .nav a {
-    text-decoration: none; font-size: .82rem; font-weight: 700; color: #5d5d59;
-    padding: 10px 11px; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+    min-width: 72px; padding: 8px 10px; border-radius: 11px;
+    text-decoration: none; color: #5c5e5c; font-weight: 750; font-size: .76rem;
   }
-  .nav a:hover, .nav a.active { color: var(--ai); background: var(--ai-soft); }
-  .mobile-menu { display: none; border: 0; background: transparent; padding: 8px; border-radius: 10px; }
+  .nav a span:last-child { font-size: .66rem; color: #858783; }
+  .nav a:hover, .nav a.active { background: var(--hanada-soft); color: var(--hanada); }
+  .nav a.active span:last-child { color: var(--hanada); }
+  .menu-button { display: none; border: 0; background: transparent; padding: 9px; border-radius: 10px; }
 
   main { overflow: clip; }
   .hero {
-    min-height: 660px; display: grid; grid-template-columns: 1.12fr .88fr;
-    max-width: 1440px; margin: 0 auto; padding: clamp(54px, 8vw, 110px) clamp(20px, 6vw, 90px);
-    align-items: center; gap: clamp(30px, 7vw, 100px);
+    max-width: 1440px; margin: 0 auto;
+    min-height: 610px; padding: clamp(48px, 8vw, 104px) clamp(18px, 6vw, 88px);
+    display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(30px, 7vw, 100px);
   }
-  .eyebrow {
-    color: var(--beni); font-size: .75rem; font-weight: 850; letter-spacing: .14em;
-    text-transform: uppercase; margin-bottom: 12px;
+  .hero-kicker {
+    color: var(--beni); font-size: .75rem; font-weight: 900; letter-spacing: .16em;
+    margin-bottom: 16px;
   }
-  h1, h2 { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.025em; }
-  h1 { font-size: clamp(3rem, 7vw, 6.5rem); line-height: .94; max-width: 840px; margin-bottom: 26px; }
-  .hero-intro { max-width: 740px; font-size: clamp(1rem, 1.6vw, 1.2rem); color: #4e4e49; }
-  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
-  .hero-meta > span {
-    border: 1px solid var(--border); background: rgba(255,255,255,.55);
-    padding: 8px 12px; border-radius: 999px; font-size: .77rem; font-weight: 700;
+  .hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(4rem, 9vw, 8rem); line-height: .9; letter-spacing: -.05em;
+    margin-bottom: 8px;
   }
-  .critical-line {
-    display: flex; gap: 14px; align-items: flex-start; max-width: 700px;
+  .hero-zh {
+    font-family: "Noto Serif TC", "Songti TC", Georgia, serif;
+    font-size: clamp(1.1rem, 2.4vw, 1.7rem); color: var(--muted); margin-bottom: 28px;
+  }
+  .hero-date { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .hero-date span {
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px;
+    background: rgba(255,255,255,.55); font-size: .76rem; font-weight: 850; letter-spacing: .04em;
+  }
+  .departure-callout {
+    display: inline-flex; align-items: center; gap: 13px;
     background: var(--yamabuki-soft); border-left: 5px solid var(--yamabuki);
-    padding: 18px 20px; border-radius: 12px;
+    padding: 15px 18px; border-radius: 13px;
   }
-  .critical-line strong { display: block; margin-bottom: 4px; }
-  .critical-line p { margin: 0; line-height: 1.5; }
-  .hero-visual { min-height: 470px; display: grid; place-items: center; }
-  .monument-art {
-    position: relative; width: min(100%, 480px); aspect-ratio: 1 / 1.14;
-    border-radius: 48% 48% 12% 12%;
-    background: linear-gradient(180deg, #e8f1f3 0%, #f7e9d5 54%, #d9e6df 55%, #cbdcd4 100%);
-    box-shadow: var(--shadow); overflow: hidden; border: 12px solid rgba(255,255,255,.64);
+  .departure-callout strong, .departure-callout span { display: block; }
+  .departure-callout span { color: #6c654d; font-size: .82rem; margin-top: 2px; }
+
+  .hero-art {
+    position: relative; min-height: 460px; border-radius: 40px;
+    overflow: hidden; background: linear-gradient(180deg, #e9f1f2 0%, #f2e2cf 58%, #c9ddd6 59%, #b8d1c9 100%);
+    border: 10px solid rgba(255,255,255,.66); box-shadow: var(--shadow);
   }
-  .sun-disc {
-    position: absolute; width: 120px; height: 120px; border-radius: 50%;
-    background: var(--beni); top: 12%; right: 11%; opacity: .92;
+  .hero-sun {
+    position: absolute; width: 128px; height: 128px; border-radius: 50%;
+    background: var(--beni); right: 12%; top: 12%;
   }
-  .obelisk {
-    position: absolute; left: 50%; bottom: 20%; transform: translateX(-50%);
-    width: 45px; height: 58%; background: linear-gradient(90deg, #ece9df 0 50%, #c9c5ba 50%);
-    clip-path: polygon(50% 0, 100% 10%, 87% 100%, 13% 100%, 0 10%);
-    filter: drop-shadow(8px 10px 10px rgba(0,0,0,.13));
+  .hero-obelisk {
+    position: absolute; width: 44px; height: 64%; left: 50%; bottom: 17%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #f0ede4 0 50%, #c9c4b8 50%);
+    clip-path: polygon(50% 0, 100% 11%, 86% 100%, 14% 100%, 0 11%);
+    filter: drop-shadow(8px 12px 12px rgba(0,0,0,.12));
   }
-  .obelisk span {
-    position: absolute; width: 190%; height: 14px; left: -45%; bottom: -9px;
-    background: #d8d3c8; border-radius: 3px;
-  }
-  .basin-line {
-    position: absolute; bottom: 13%; left: -5%; width: 110%; height: 17%;
-    border-radius: 50%; border-top: 4px solid rgba(15,76,92,.36);
+  .hero-water {
+    position: absolute; left: -4%; bottom: 6%; width: 108%; height: 21%;
+    border-radius: 50%; border-top: 4px solid rgba(15,76,92,.32);
     background: linear-gradient(180deg, transparent, rgba(15,76,92,.18));
   }
-  .city-label {
-    position: absolute; left: 22px; bottom: 20px; color: var(--ai);
-    font-size: .66rem; font-weight: 900; letter-spacing: .16em; line-height: 1.5;
+  .hero-stamp {
+    position: absolute; left: 25px; bottom: 24px; width: 112px; aspect-ratio: 1;
+    border: 2px solid rgba(15,76,92,.72); border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--ai); transform: rotate(-8deg); text-align: center;
   }
+  .hero-stamp span { font-size: .55rem; letter-spacing: .14em; font-weight: 850; }
+  .hero-stamp strong { font-size: 2.25rem; line-height: 1; margin: 4px 0; }
 
-  .page-section { max-width: var(--max); margin: 0 auto; padding: 72px clamp(18px, 4vw, 44px); }
-  .section-heading { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 30px; }
-  .section-icon {
-    width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
-    background: var(--ai); color: white; flex: 0 0 auto;
+  .transport-strip {
+    max-width: var(--max); margin: -34px auto 0; padding: 0 clamp(16px, 4vw, 40px);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; position: relative; z-index: 2;
   }
-  .section-heading h2 { font-size: clamp(2rem, 4vw, 3.25rem); margin-bottom: 8px; }
-  .section-heading p { margin: 0; color: var(--muted); max-width: 760px; }
+  .transport-card {
+    background: rgba(255,255,255,.88); border: 1px solid var(--line); border-radius: 18px;
+    padding: 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 13px;
+    align-items: center; box-shadow: 0 12px 34px rgba(43,39,31,.06);
+  }
+  .transport-icon {
+    width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+    background: var(--hanada-soft); color: var(--hanada);
+  }
+  .transport-label { display: flex; gap: 6px; color: var(--muted); font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+  .transport-card strong { display: block; margin: 3px 0; font-size: .92rem; }
+  .transport-sub { display: flex; flex-direction: column; font-size: .72rem; color: var(--muted); line-height: 1.35; }
 
-  .route-diagram {
-    background: rgba(255,255,255,.64); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 18px; overflow: hidden; margin-bottom: 22px;
+  .quick-facts {
+    max-width: var(--max); margin: 18px auto 0; padding: 0 clamp(16px, 4vw, 40px);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
   }
-  .route-diagram svg { display: block; width: 100%; height: auto; min-width: 700px; }
-  .route-line { fill: none; stroke: var(--ai); stroke-width: 3; stroke-dasharray: 5 8; }
-  .route-node { fill: var(--paper); stroke: var(--ai); stroke-width: 4; }
-  .route-node.endpoint { fill: var(--beni); stroke: var(--beni); }
-  .route-diagram text { font-size: 14px; fill: var(--ink); font-weight: 700; }
+  .quick-facts article {
+    background: rgba(255,255,255,.5); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  }
+  .quick-facts strong { display: block; color: var(--ai); font-size: 1.45rem; margin-bottom: 4px; }
 
-  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 20px 0; }
-  .metric-card {
-    border-radius: 16px; padding: 20px; background: var(--white); border: 1px solid var(--border);
+  .return-alert {
+    max-width: calc(var(--max) - 80px); margin: 18px auto 0;
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+    padding: 17px 19px; border-radius: 16px; background: var(--beni-soft); border: 1px solid #e7c7c2;
   }
-  .metric-card strong { display: block; font-size: clamp(1.5rem, 3vw, 2.4rem); color: var(--ai); }
-  .metric-card span { font-size: .82rem; color: var(--muted); }
+  .return-alert .alert-icon {
+    width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px;
+    background: white; color: var(--beni);
+  }
+  .return-alert strong, .return-alert > div > span { display: block; }
+  .return-alert > div > span { color: #765957; font-size: .8rem; margin: 2px 0 8px; }
+  .return-alert p { margin: 2px 0; font-size: .8rem; line-height: 1.45; color: #5f4b49; }
 
-  .overview-grid { display: grid; grid-template-columns: 1.25fr .8fr 1fr; gap: 18px; align-items: start; }
-  .card {
-    background: rgba(255,255,255,.78); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: clamp(20px, 3vw, 30px); box-shadow: 0 8px 26px rgba(40,36,28,.04);
+  .day-section {
+    max-width: var(--max); margin: 0 auto; padding: 90px clamp(16px, 4vw, 40px) 20px;
   }
-  .card h3, .packing-card h3, .route-card h3 {
-    display: flex; align-items: center; gap: 9px; font-size: 1.05rem; margin-bottom: 18px;
+  .day-header {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: end;
+    padding-bottom: 26px; border-bottom: 1px solid var(--line); margin-bottom: 28px;
   }
-  .fixed-card { border-top: 5px solid var(--ai); }
-  .alert-card { background: var(--beni-soft); border-color: #e4c1bc; }
-  .commitment { display: grid; grid-template-columns: 116px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-  .commitment:last-child { border: 0; }
-  .commitment time { color: var(--ai); font-size: .78rem; font-weight: 850; }
-  .commitment span { font-size: .9rem; line-height: 1.45; }
-  .clean-list, .number-list { margin: 0; padding-left: 1.2rem; }
-  .clean-list li, .number-list li { padding: 6px 0; line-height: 1.52; white-space: pre-line; }
-  .now-card { display: grid; grid-template-columns: 1fr 1.15fr; gap: 28px; margin-top: 18px; background: var(--ai); color: white; }
-  .now-card .number-list { color: rgba(255,255,255,.9); }
-  .checklist-panel { background: white; color: var(--ink); padding: 22px; border-radius: 16px; }
-  .checklist-header { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
-  .checklist-header h3 { margin-bottom: 3px; }
-  .checklist-header span { color: var(--muted); font-size: .78rem; }
-  .checklist-header button {
-    border: 1px solid var(--border); background: var(--paper); border-radius: 8px; padding: 7px 10px; cursor: pointer;
+  .day-number {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(4rem, 8vw, 7rem); line-height: .75; color: var(--accent);
   }
-  .progress { height: 8px; background: #eee9df; border-radius: 20px; overflow: hidden; margin: 15px 0; }
-  .progress span { display: block; height: 100%; background: var(--beni); transition: width .25s ease; }
-  .check-items { display: grid; gap: 4px; max-height: 310px; overflow: auto; padding-right: 5px; }
-  .check-items label { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 9px; cursor: pointer; font-size: .86rem; line-height: 1.42; }
-  .check-items label:hover { background: var(--paper); }
-  .check-items input { position: absolute; opacity: 0; }
-  .custom-check { width: 20px; height: 20px; border: 1px solid var(--border); border-radius: 6px; display: grid; place-items: center; flex: 0 0 auto; color: transparent; }
-  .check-items input:checked + .custom-check { background: var(--ai); border-color: var(--ai); color: white; }
-  .check-items input:focus-visible + .custom-check { outline: 3px solid rgba(0,98,132,.25); outline-offset: 2px; }
+  .accent-hanada { --accent: var(--hanada); --accent-soft: var(--hanada-soft); }
+  .accent-beni { --accent: var(--beni); --accent-soft: var(--beni-soft); }
+  .accent-matcha { --accent: #68887B; --accent-soft: var(--matcha-soft); }
 
-  .flight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .flight-label { display: flex; align-items: center; gap: 10px; font-weight: 850; margin-bottom: 18px; }
-  .flight-label.outbound { color: var(--hanada); }
-  .flight-label.inbound { color: var(--beni); }
-  .data-row { display: grid; grid-template-columns: minmax(110px, .75fr) 1.25fr; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-  .data-row:last-child { border-bottom: 0; }
-  .data-key { color: var(--muted); font-size: .78rem; font-weight: 750; }
-  .data-value { font-size: .9rem; font-weight: 650; line-height: 1.45; }
-
-  .day-section { max-width: 1320px; }
-  .day-banner {
-    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 74%, black));
-    color: white; border-radius: 28px; padding: clamp(26px, 5vw, 48px);
-    display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 20px;
+  .date-line { display: flex; flex-wrap: wrap; gap: 9px; color: var(--accent); font-size: .73rem; font-weight: 900; letter-spacing: .1em; }
+  .day-heading h2 {
+    font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 4.5vw, 4rem);
+    line-height: 1; letter-spacing: -.035em; margin: 8px 0 4px;
   }
-  .day-banner .eyebrow { color: rgba(255,255,255,.76); }
-  .day-banner h2 { font-size: clamp(2rem, 4.8vw, 4rem); margin-bottom: 12px; }
-  .day-banner p { max-width: 760px; margin: 0; color: rgba(255,255,255,.88); white-space: pre-line; }
-  .theme-pill { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.34); padding: 10px 14px; border-radius: 999px; font-size: .8rem; font-weight: 750; white-space: nowrap; }
-  .day-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .65fr); gap: 20px; align-items: start; }
-  .timeline-card h3 { margin-bottom: 26px; }
+  .day-title-zh { color: var(--muted); font-size: 1rem; margin-bottom: 14px; }
+  .day-summary { display: flex; flex-direction: column; gap: 3px; max-width: 760px; font-size: .88rem; line-height: 1.45; }
+  .day-summary span:last-child { color: var(--muted); }
+
+  .filter-button {
+    display: inline-flex; align-items: center; gap: 8px; padding: 11px 13px;
+    border: 1px solid var(--line); border-radius: 12px; background: white; cursor: pointer;
+  }
+  .filter-button:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .filter-button .bi { font-size: .74rem; text-align: left; }
+
+  .day-body { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, .55fr); gap: 24px; align-items: start; }
   .timeline { position: relative; }
-  .timeline::before { content: ""; position: absolute; left: 131px; top: 6px; bottom: 8px; width: 1px; background: var(--border); }
-  .timeline-item { display: grid; grid-template-columns: 110px 42px 1fr; gap: 0; min-height: 68px; position: relative; }
-  .timeline-time { font-size: .76rem; font-weight: 800; color: var(--ai); padding-top: 5px; }
-  .timeline-marker {
-    width: 30px; height: 30px; margin-left: 6px; border-radius: 50%; display: grid; place-items: center;
-    background: var(--paper); border: 1px solid var(--border); color: var(--ai); z-index: 1;
+  .timeline::before {
+    content: ""; position: absolute; left: 132px; top: 18px; bottom: 18px;
+    width: 1px; background: var(--line);
   }
-  .type-fixed .timeline-marker { background: var(--beni); color: white; border-color: var(--beni); }
-  .type-meal .timeline-marker { background: var(--yamabuki-soft); color: #8c5c00; }
-  .type-visit .timeline-marker { background: var(--hanada-soft); color: var(--hanada); }
-  .timeline-content { padding: 2px 0 18px 2px; }
-  .timeline-content h4 { margin-bottom: 4px; font-size: .95rem; }
-  .timeline-content p { margin: 0; color: var(--muted); font-size: .84rem; line-height: 1.45; white-space: pre-line; }
-  .day-side { display: grid; gap: 16px; position: sticky; top: 92px; }
-  .decision-block { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px; }
-  .decision-block strong { color: var(--beni); }
-  .decision-block.protect strong { color: var(--ai); }
-  .decision-block ul { margin-bottom: 0; padding-left: 1.1rem; }
-  .decision-block li { padding: 4px 0; font-size: .84rem; line-height: 1.4; }
-  .detail-toggle {
-    width: 100%; margin-top: 18px; padding: 16px 20px; border-radius: 14px;
-    border: 1px solid var(--border); background: rgba(255,255,255,.7);
-    display: flex; justify-content: space-between; font-weight: 800; cursor: pointer;
+  .timeline-item {
+    display: grid; grid-template-columns: 108px 48px minmax(0,1fr); align-items: start; min-height: 88px;
   }
-  .detail-toggle:hover { background: white; }
-  .location-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
-  .location-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
-  .location-card h3 { margin-bottom: 8px; font-size: 1rem; }
-  .location-card address { color: var(--ai); font-size: .8rem; font-weight: 750; margin-bottom: 10px; }
-  .location-card p { margin: 0; font-size: .86rem; color: #555; white-space: pre-line; }
-
-  .route-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-  .route-card {
-    background: white; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 26px;
+  .time-cell { padding-top: 13px; text-align: right; position: relative; }
+  .time-cell time { font-size: .75rem; font-weight: 850; color: var(--accent); }
+  .fixed-dot {
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--beni); margin-left: 7px;
   }
-  .step-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .step-chain span { background: var(--ai-soft); color: var(--ai); border-radius: 999px; padding: 8px 10px; font-size: .78rem; font-weight: 750; }
-  .step-chain b { color: var(--muted); }
-  .route-card p { margin: 16px 0 0; color: var(--muted); font-size: .86rem; white-space: pre-line; }
-  .hostel-card { margin-top: 18px; }
-
-  .packing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .packing-card { background: white; border: 1px solid var(--border); border-radius: 18px; padding: 22px; }
-  .packing-card:nth-child(1) { border-top: 5px solid var(--beni); }
-  .packing-card:nth-child(2) { border-top: 5px solid var(--hanada); }
-  .packing-card:nth-child(3) { border-top: 5px solid var(--matcha); }
-  .packing-card:nth-child(4) { border-top: 5px solid var(--yamabuki); }
-  .packing-card ul { padding-left: 1.05rem; margin: 0; }
-  .packing-card li { padding: 5px 0; font-size: .84rem; line-height: 1.4; }
-  .rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
-  .rule-card { background: var(--ai); color: white; border-radius: 18px; padding: 24px; }
-  .rule-card p { margin: 8px 0 0; color: rgba(255,255,255,.85); }
-
-  .priority-table { border: 1px solid var(--border); border-radius: 18px; overflow: hidden; background: white; }
-  .priority-row { display: grid; grid-template-columns: .55fr 1.5fr 1fr; gap: 18px; padding: 18px 20px; border-bottom: 1px solid var(--border); align-items: start; }
-  .priority-row:last-child { border-bottom: 0; }
-  .priority-row strong { color: var(--ai); }
-  .priority-row span { font-size: .88rem; line-height: 1.5; }
-  .weather-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; margin-top: 18px; }
-  .weather-row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; border-top: 1px solid var(--border); padding: 12px 0; }
-  .weather-row:first-of-type { border-top: 0; }
-  .weather-row p { margin: 0; font-size: .86rem; white-space: pre-line; }
-  .conflict-card { background: var(--beni-soft); border-color: #e4c1bc; }
-  .conflict-card p { margin: 0; white-space: pre-line; }
-
-  .source-section { padding-bottom: 120px; }
-  .source-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
-  .source-item { padding: 16px 18px; display: grid; grid-template-columns: 170px 1fr; gap: 15px; background: white; border-bottom: 1px solid var(--border); }
-  .source-item:nth-child(odd) { border-right: 1px solid var(--border); }
-  .source-item strong { color: var(--ai); }
-  .source-item span { color: var(--muted); font-size: .85rem; }
-  .design-note { color: var(--muted); font-size: .82rem; margin-top: 18px; }
-
-  .language-dock {
-    position: fixed; right: 18px; bottom: 18px; z-index: 1100;
-    display: flex; gap: 4px; padding: 6px; border-radius: 16px;
-    background: rgba(28,28,28,.92); box-shadow: 0 12px 30px rgba(0,0,0,.2);
+  .timeline-rail { position: relative; z-index: 1; display: flex; justify-content: center; padding-top: 6px; }
+  .timeline-icon {
+    width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--paper); border: 1px solid var(--line); color: var(--accent);
   }
-  .language-dock button {
-    border: 0; background: transparent; color: rgba(255,255,255,.7); border-radius: 11px;
-    padding: 10px 12px; font-weight: 850; cursor: pointer;
+  .type-flight .timeline-icon,
+  .type-airport .timeline-icon,
+  .type-security .timeline-icon {
+    background: var(--accent); color: white; border-color: var(--accent);
   }
-  .language-dock button.active { background: white; color: var(--ink); }
-  button:focus-visible, a:focus-visible { outline: 3px solid rgba(0,98,132,.34); outline-offset: 3px; }
+  .type-meal .timeline-icon { background: var(--yamabuki-soft); color: #8d6208; }
+  .type-visit .timeline-icon { background: var(--accent-soft); color: var(--accent); }
+  .type-boat .timeline-icon { background: var(--hanada-soft); color: var(--hanada); }
+
+  .timeline-card {
+    background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 16px;
+    padding: 14px 15px; margin-bottom: 12px; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .timeline-card:hover {
+    transform: translateY(-2px); border-color: var(--accent);
+    box-shadow: 0 10px 25px rgba(43,39,31,.06);
+  }
+  .timeline-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .type-label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .type-label .bi { flex-direction: row; gap: 5px; color: var(--muted); font-size: .64rem; font-weight: 850; text-transform: uppercase; letter-spacing: .05em; }
+  .type-label .bi .zh { color: var(--muted); font-size: 1em; }
+  .fixed-badge {
+    padding: 3px 6px; border-radius: 999px; background: var(--beni-soft); color: var(--beni);
+    font-size: .58rem; font-weight: 900; letter-spacing: .04em;
+  }
+  .timeline-card h3 { font-size: .98rem; margin-bottom: 2px; }
+  .timeline-card h3 + p { margin: 0; color: var(--muted); font-size: .78rem; }
+  .timeline-detail {
+    display: flex; flex-direction: column; gap: 2px; margin-top: 10px;
+    padding-top: 9px; border-top: 1px solid #ebe7dd; font-size: .76rem; line-height: 1.35;
+  }
+  .timeline-detail span:last-child { color: var(--muted); }
+  .timeline-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .map-button, .mini-map {
+    display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+    color: var(--hanada); background: var(--hanada-soft); border-radius: 10px;
+    padding: 9px 11px; font-size: .72rem; font-weight: 850;
+  }
+  .map-button.compact { width: 34px; height: 34px; padding: 0; justify-content: center; }
+  .mini-map { padding: 7px 8px; }
+  .map-button:hover, .mini-map:hover { background: #c8e0e9; }
+
+  .day-sidebar { position: sticky; top: 92px; }
+  .priority-panel { display: grid; gap: 12px; }
+  .priority-box { border-radius: 17px; padding: 18px; border: 1px solid var(--line); background: white; }
+  .priority-box.keep { border-top: 5px solid var(--accent); }
+  .priority-box.cut { border-top: 5px solid var(--beni); }
+  .priority-kicker { font-size: .65rem; font-weight: 900; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+  .priority-box ul { margin: 0; padding-left: 1.05rem; }
+  .priority-box li { padding: 5px 0; font-size: .78rem; line-height: 1.35; }
+
+  .checklist-section, .packing-section {
+    max-width: var(--max); margin: 0 auto; padding: 90px clamp(16px, 4vw, 40px) 20px;
+  }
+  .section-title {
+    display: flex; align-items: flex-end; gap: 18px; padding-bottom: 24px; border-bottom: 1px solid var(--line); margin-bottom: 24px;
+  }
+  .section-index { font-family: Georgia, "Times New Roman", serif; font-size: 4.5rem; line-height: .78; color: var(--ai); }
+  .section-title h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 4vw, 3.4rem); margin-bottom: 2px; }
+  .section-title p { color: var(--muted); margin: 0; }
+
+  .checklist-card {
+    background: var(--ai); color: white; border-radius: 24px; padding: clamp(20px, 4vw, 34px);
+  }
+  .checklist-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+  .checklist-top strong { display: block; font-size: 2rem; }
+  .checklist-top span { color: rgba(255,255,255,.72); font-size: .78rem; }
+  .checklist-top button {
+    color: white; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.24);
+    padding: 8px 11px; border-radius: 10px; cursor: pointer;
+  }
+  .progress { height: 8px; background: rgba(255,255,255,.16); border-radius: 999px; margin: 18px 0 22px; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--yamabuki); transition: width .2s ease; }
+  .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .checklist-grid label {
+    display: flex; align-items: flex-start; gap: 10px; padding: 11px;
+    border-radius: 12px; cursor: pointer; background: rgba(255,255,255,.06);
+  }
+  .checklist-grid label:hover { background: rgba(255,255,255,.1); }
+  .checklist-grid label.checked { opacity: .68; }
+  .checklist-grid input { position: absolute; opacity: 0; }
+  .check-box {
+    width: 21px; height: 21px; border-radius: 6px; border: 1px solid rgba(255,255,255,.48);
+    display: grid; place-items: center; flex: 0 0 auto; color: transparent;
+  }
+  .checklist-grid input:checked + .check-box { background: white; color: var(--ai); border-color: white; }
+  .checklist-grid .bi { font-size: .8rem; }
+  .checklist-grid .bi .zh { color: rgba(255,255,255,.68); }
+
+  .packing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+  .packing-grid article { background: white; border: 1px solid var(--line); border-radius: 20px; padding: 22px; }
+  .packing-icon {
+    width: 40px; height: 40px; display: grid; place-items: center;
+    border-radius: 12px; background: var(--hanada-soft); color: var(--hanada); margin-bottom: 15px;
+  }
+  .packing-grid h3 { margin-bottom: 2px; }
+  .packing-grid h3 + p { color: var(--muted); font-size: .78rem; }
+  .packing-grid ul { margin: 14px 0 0; padding-left: 1.05rem; }
+  .packing-grid li { padding: 5px 0; font-size: .8rem; }
+  .rules-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 15px; }
+  .rules-row > div {
+    display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: start;
+    background: var(--yamabuki-soft); border: 1px solid #ead9a4; border-radius: 16px; padding: 17px;
+  }
+  .rules-row strong { color: #705515; }
+
+  .floating-map {
+    position: fixed; right: 16px; bottom: 16px; z-index: 1100;
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+    background: rgba(28,28,28,.93); color: white; border-radius: 15px;
+    padding: 11px 14px; box-shadow: 0 16px 34px rgba(0,0,0,.18);
+  }
+  .floating-map strong, .floating-map small { display: block; }
+  .floating-map strong { font-size: .78rem; }
+  .floating-map small { color: rgba(255,255,255,.65); font-size: .64rem; margin-top: 2px; }
 
   footer {
-    max-width: var(--max); margin: 0 auto; padding: 28px 44px 80px;
-    display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem;
-    border-top: 1px solid var(--border);
+    max-width: var(--max); margin: 90px auto 0; padding: 28px 40px 84px;
+    border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px;
+    color: var(--muted); font-size: .76rem;
+  }
+  footer strong, footer span { display: block; }
+  footer strong { color: var(--ink); }
+
+  a:focus-visible, button:focus-visible, input:focus-visible + .check-box {
+    outline: 3px solid rgba(0,98,132,.35); outline-offset: 3px;
   }
 
-  @media (max-width: 1050px) {
-    .nav { position: fixed; top: 72px; right: 12px; left: 12px; display: none; grid-template-columns: repeat(2, 1fr); padding: 12px; background: var(--paper); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+  @media (max-width: 1040px) {
+    .menu-button { display: grid; place-items: center; }
+    .nav {
+      position: fixed; top: 72px; right: 12px; left: 12px;
+      display: none; grid-template-columns: repeat(2, 1fr); padding: 12px;
+      background: var(--paper); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+    }
     .nav.open { display: grid; }
-    .mobile-menu { display: grid; place-items: center; }
-    .hero { grid-template-columns: 1fr; min-height: auto; }
-    .hero-visual { min-height: 380px; }
-    .monument-art { width: min(100%, 390px); }
-    .overview-grid { grid-template-columns: 1fr 1fr; }
-    .overview-grid .alert-card { grid-column: 1 / -1; }
-    .packing-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { grid-template-columns: 1fr; }
+    .hero-art { min-height: 360px; }
+    .transport-strip { grid-template-columns: 1fr; margin-top: 0; }
+    .quick-facts { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (max-width: 800px) {
-    .topbar { padding-inline: 16px; }
-    .brand span { display: none; }
-    .hero { padding-top: 58px; }
-    h1 { font-size: clamp(3rem, 15vw, 5rem); }
-    .metric-grid { grid-template-columns: repeat(2, 1fr); }
-    .overview-grid, .now-card, .flight-grid, .day-layout, .route-grid, .weather-grid { grid-template-columns: 1fr; }
-    .day-side { position: static; }
-    .location-grid, .source-grid { grid-template-columns: 1fr; }
-    .source-item:nth-child(odd) { border-right: 0; }
-    .priority-row { grid-template-columns: 1fr; gap: 6px; }
-    .rule-grid { grid-template-columns: 1fr; }
-    .day-banner { align-items: flex-start; flex-direction: column; }
-    .route-diagram { overflow-x: auto; }
+  @media (max-width: 820px) {
+    .day-header { grid-template-columns: auto 1fr; align-items: start; }
+    .filter-button { grid-column: 1 / -1; justify-self: start; }
+    .day-body { grid-template-columns: 1fr; }
+    .day-sidebar { position: static; }
+    .packing-grid { grid-template-columns: 1fr; }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .rules-row { grid-template-columns: 1fr; }
   }
 
-  @media (max-width: 560px) {
-    .page-section { padding: 52px 15px; }
-    .hero { padding-inline: 17px; }
-    .hero-visual { min-height: 320px; }
-    .monument-art { border-width: 8px; }
-    .metric-grid, .packing-grid { grid-template-columns: 1fr; }
-    .timeline::before { left: 25px; }
-    .timeline-item { grid-template-columns: 42px 1fr; grid-template-areas: "marker content" "time content"; min-height: 86px; }
-    .timeline-time { grid-area: time; font-size: .66rem; padding-top: 0; word-break: break-word; }
-    .timeline-marker { grid-area: marker; margin-left: 0; }
-    .timeline-content { grid-area: content; padding-left: 4px; }
-    .commitment { grid-template-columns: 1fr; gap: 4px; }
-    .data-row { grid-template-columns: 1fr; gap: 4px; }
-    .source-item { grid-template-columns: 1fr; gap: 4px; }
-    .weather-row { grid-template-columns: 1fr; gap: 4px; }
-    .language-dock { right: 10px; bottom: 10px; }
-    footer { padding: 24px 16px 86px; flex-direction: column; gap: 8px; }
+  @media (max-width: 600px) {
+    .topbar { height: 66px; padding-inline: 14px; }
+    .brand-copy small { display: none; }
+    html { scroll-padding-top: 72px; }
+
+    .hero { padding: 48px 16px 38px; min-height: auto; }
+    .hero h1 { font-size: 4.5rem; }
+    .hero-art { min-height: 300px; border-radius: 28px; border-width: 7px; }
+    .hero-sun { width: 92px; height: 92px; }
+    .hero-stamp { width: 88px; left: 18px; bottom: 18px; }
+
+    .transport-strip, .quick-facts { padding-inline: 14px; }
+    .quick-facts { grid-template-columns: 1fr 1fr; }
+    .return-alert { margin-inline: 14px; }
+
+    .day-section, .checklist-section, .packing-section { padding-inline: 14px; padding-top: 68px; }
+    .day-header { grid-template-columns: 1fr; gap: 14px; }
+    .day-number { font-size: 4.5rem; }
+    .filter-button { grid-column: auto; }
+    .timeline::before { left: 17px; }
+    .timeline-item { grid-template-columns: 36px minmax(0,1fr); grid-template-areas: "rail card" "time card"; min-height: 108px; }
+    .time-cell {
+      grid-area: time; text-align: left; padding-top: 0; writing-mode: vertical-rl;
+      transform: rotate(180deg); display: flex; align-items: center; justify-content: flex-end;
+    }
+    .time-cell time { font-size: .64rem; }
+    .fixed-dot { display: none; }
+    .timeline-rail { grid-area: rail; justify-content: flex-start; }
+    .timeline-card { grid-area: card; }
+    .timeline-main { gap: 8px; }
+    .timeline-actions { flex-direction: column; align-items: flex-end; }
+    .timeline-card h3 { font-size: .92rem; }
+
+    .section-index { font-size: 3.6rem; }
+    .rules-row > div { grid-template-columns: 1fr; gap: 7px; }
+
+    .floating-map { right: 10px; bottom: 10px; padding: 10px 12px; }
+    .floating-map span { display: none; }
+
+    footer { margin-top: 60px; padding-inline: 16px; flex-direction: column; }
   }
 
   @media print {
-    .topbar, .language-dock, .detail-toggle, .checklist-header button { display: none !important; }
+    .topbar, .floating-map, .filter-button, .map-button, .mini-map, .checklist-top button { display: none !important; }
+    .hero { min-height: auto; padding: 20px 0; }
+    .hero-art { display: none; }
+    .transport-strip, .quick-facts, .day-section, .checklist-section, .packing-section {
+      max-width: none; padding-left: 0; padding-right: 0;
+    }
+    .timeline-card, .transport-card, .packing-grid article, .priority-box, .checklist-card { break-inside: avoid; }
+    .day-sidebar { position: static; }
     .app { background: white; }
-    .page-section, .hero { padding: 24px 0; max-width: none; }
-    .hero { min-height: auto; }
-    .hero-visual { display: none; }
-    .card, .route-card, .packing-card, .priority-table { break-inside: avoid; box-shadow: none; }
-    .day-side { position: static; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
   }
 `;
