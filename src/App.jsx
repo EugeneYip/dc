@@ -96,7 +96,7 @@ const DAYS = [
       {
         time: "9:35–10:40",
         en: "Chinatown and CityCenter",
-        zh: "Chinatown 與 CityCenter",
+        zh: "",
         detailEn: "Water, coffee, or essentials only",
         detailZh: "只買水、咖啡或日用品",
         type: "flex",
@@ -104,7 +104,7 @@ const DAYS = [
       {
         time: "11:00–11:45",
         en: "Teaism Penn Quarter",
-        zh: "Teaism Penn Quarter",
+        zh: "",
         detailEn: "Lunch",
         detailZh: "午餐",
         map: MAPS.teaism,
@@ -113,7 +113,7 @@ const DAYS = [
       {
         time: "12:05–3:45",
         en: "National Gallery of Art",
-        zh: "National Gallery of Art",
+        zh: "",
         detailEn: "West Building first",
         detailZh: "先看 West Building",
         map: MAPS.nga,
@@ -132,7 +132,7 @@ const DAYS = [
       {
         time: "5:00–6:15",
         en: "Old Ebbitt Grill",
-        zh: "Old Ebbitt Grill",
+        zh: "",
         detailEn: "Reservation for one",
         detailZh: "一人訂位",
         map: MAPS.oldEbbitt,
@@ -205,7 +205,7 @@ const DAYS = [
       {
         time: "8:10–8:45",
         en: "White House",
-        zh: "White House",
+        zh: "",
         detailEn: "North-side photographs",
         detailZh: "北側拍照",
         map: MAPS.whiteHouse,
@@ -232,7 +232,7 @@ const DAYS = [
       {
         time: "10:00–10:50",
         en: "Washington Monument",
-        zh: "Washington Monument",
+        zh: "",
         detailEn: "Timed reservation",
         detailZh: "預約入場",
         map: MAPS.washingtonMonument,
@@ -242,7 +242,7 @@ const DAYS = [
       {
         time: "11:05–11:25",
         en: "World War II Memorial",
-        zh: "World War II Memorial",
+        zh: "",
         detailEn: "Short focused stop",
         detailZh: "集中參觀",
         map: MAPS.wwii,
@@ -251,7 +251,7 @@ const DAYS = [
       {
         time: "11:25–12:00",
         en: "Reflecting Pool",
-        zh: "Reflecting Pool",
+        zh: "",
         detailEn: "Walk, photos, and water",
         detailZh: "步行、拍照、補水",
         map: MAPS.reflectingPool,
@@ -260,7 +260,7 @@ const DAYS = [
       {
         time: "12:00–12:25",
         en: "Lincoln Memorial",
-        zh: "Lincoln Memorial",
+        zh: "",
         detailEn: "Main chamber and steps",
         detailZh: "主殿與階梯",
         map: MAPS.lincoln,
@@ -269,7 +269,7 @@ const DAYS = [
       {
         time: "12:25–12:55",
         en: "Vietnam and Korean War Memorials",
-        zh: "Vietnam 與 Korean War Memorials",
+        zh: "",
         detailEn: "Drop one if the schedule slips",
         detailZh: "若延誤，刪除其中一處",
         links: [
@@ -281,7 +281,7 @@ const DAYS = [
       {
         time: "1:05–1:35",
         en: "Mars Café",
-        zh: "Mars Café",
+        zh: "",
         detailEn: "Fast lunch or takeaway",
         detailZh: "快速午餐或外帶",
         map: MAPS.marsCafe,
@@ -299,7 +299,7 @@ const DAYS = [
       {
         time: "2:00–3:30",
         en: "National Air and Space Museum",
-        zh: "National Air and Space Museum",
+        zh: "",
         detailEn: "Timed entry",
         detailZh: "預約入場",
         map: MAPS.airSpace,
@@ -327,7 +327,7 @@ const DAYS = [
       {
         time: "4:30–6:40",
         en: "Library of Congress",
-        zh: "Library of Congress",
+        zh: "",
         detailEn: "Live! at the Library",
         detailZh: "Live! at the Library",
         map: MAPS.loc,
@@ -337,7 +337,7 @@ const DAYS = [
       {
         time: "7:10–8:10",
         en: "DAIKAYA",
-        zh: "DAIKAYA",
+        zh: "",
         detailEn: "First-floor ramen shop",
         detailZh: "一樓拉麵店",
         map: MAPS.daikaya,
@@ -392,7 +392,7 @@ const DAYS = [
       {
         time: "11:35–12:20",
         en: "M Street and C&O Canal",
-        zh: "M Street 與 C&O Canal",
+        zh: "",
         detailEn: "Historic streets and canal",
         detailZh: "歷史街區與運河",
         map: MAPS.mStreet,
@@ -409,7 +409,7 @@ const DAYS = [
       {
         time: "1:20–2:05",
         en: "Wisconsin Avenue",
-        zh: "Wisconsin Avenue",
+        zh: "",
         detailEn: "Shops and side streets",
         detailZh: "商店與巷弄",
         type: "flex",
@@ -417,7 +417,7 @@ const DAYS = [
       {
         time: "2:05–2:50",
         en: "Georgetown Waterfront Park",
-        zh: "Georgetown Waterfront Park",
+        zh: "",
         detailEn: "Potomac and Key Bridge views",
         detailZh: "Potomac 與 Key Bridge 景色",
         map: MAPS.waterfront,
@@ -445,7 +445,7 @@ const DAYS = [
       {
         time: "3:30–4:15",
         en: "Potomac Water Taxi",
-        zh: "Potomac Water Taxi",
+        zh: "",
         detailEn: "Georgetown to The Wharf",
         detailZh: "Georgetown 前往 The Wharf",
         map: MAPS.waterTaxi,
@@ -455,7 +455,7 @@ const DAYS = [
       {
         time: "4:15–5:15",
         en: "The Wharf",
-        zh: "The Wharf",
+        zh: "",
         detailEn: "Transit Pier and waterfront",
         detailZh: "Transit Pier 與水岸",
         map: MAPS.wharf,
@@ -472,7 +472,7 @@ const DAYS = [
       {
         time: "5:50–6:35",
         en: "Bantam King",
-        zh: "Bantam King",
+        zh: "",
         detailEn: "Early dinner",
         detailZh: "提早晚餐",
         map: MAPS.bantamKing,
@@ -668,7 +668,7 @@ function TimelineItem({ item }) {
               {item.fixed && <span className="fixed-badge">FIXED · 固定</span>}
             </div>
             <h3>{item.en}</h3>
-            <p lang="zh-Hant">{item.zh}</p>
+            {item.zh && <p lang="zh-Hant">{item.zh}</p>}
           </div>
 
           <div className="timeline-actions">
@@ -976,24 +976,6 @@ function PackingSection() {
   );
 }
 
-function ReturnAlert() {
-  return (
-    <section className="return-alert">
-      <div className="alert-icon"><Icon name="shield" size={24} /></div>
-      <div>
-        <strong>Reconfirm the final return booking</strong>
-        <span lang="zh-Hant">重新確認最終回程訂位</span>
-        <p>
-          This itinerary uses Delta DL 5633 on June 26. A later planning record mentions Acela 2262 on June 27.
-        </p>
-        <p lang="zh-Hant">
-          本行程使用 6 月 26 日 Delta DL 5633，但較新的規劃紀錄提及 6 月 27 日 Acela 2262。出發前必須確認哪一張票仍有效。
-        </p>
-      </div>
-    </section>
-  );
-}
-
 export default function DC2026() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("overview");
@@ -1099,7 +1081,6 @@ export default function DC2026() {
 
         <TransportStrip />
         <QuickFacts />
-        <ReturnAlert />
 
         {DAYS.map((day) => (
           <DaySection day={day} key={day.id} />
@@ -1111,14 +1092,14 @@ export default function DC2026() {
 
       <a
         className="floating-map"
-        href={MAPS.hostel}
+        href="https://maps.app.goo.gl/3V7D3rmZY6j4Umih6"
         target="_blank"
         rel="noreferrer"
-        aria-label="Open hostel in Google Maps"
+        aria-label="Open trip map in Google Maps"
       >
         <Icon name="map" size={21} />
         <span>
-          <strong>Hostel</strong>
+          <strong>Trip Map</strong>
           <small>Google Maps</small>
         </span>
       </a>
@@ -1128,7 +1109,7 @@ export default function DC2026() {
           <strong>D.C. 2026</strong>
           <span>Responsive bilingual itinerary · 響應式雙語行程</span>
         </div>
-        <span>Updated June 24, 2026</span>
+        <span>Return confirmed: Delta DL 5633</span>
       </footer>
     </div>
   );
@@ -1197,7 +1178,7 @@ const styles = `
     color: white; background: var(--ai); font-weight: 900; letter-spacing: .06em;
   }
   .brand-copy strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; }
-  .brand-copy small { display: block; color: var(--muted); font-size: .64rem; font-weight: 750; letter-spacing: .08em; margin-top: 2px; }
+  .brand-copy small { display: block; color: var(--muted); font-size: .72rem; font-weight: 750; letter-spacing: .06em; margin-top: 2px; }
 
   .nav { display: flex; gap: 4px; align-items: center; }
   .nav a {
@@ -1205,7 +1186,7 @@ const styles = `
     min-width: 72px; padding: 8px 10px; border-radius: 11px;
     text-decoration: none; color: #5c5e5c; font-weight: 750; font-size: .76rem;
   }
-  .nav a span:last-child { font-size: .66rem; color: #858783; }
+  .nav a span:last-child { font-size: .72rem; color: #858783; }
   .nav a:hover, .nav a.active { background: var(--hanada-soft); color: var(--hanada); }
   .nav a.active span:last-child { color: var(--hanada); }
   .menu-button { display: none; border: 0; background: transparent; padding: 9px; border-radius: 10px; }
@@ -1222,12 +1203,12 @@ const styles = `
   }
   .hero h1 {
     font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(4rem, 9vw, 8rem); line-height: .9; letter-spacing: -.05em;
+    font-size: clamp(3.4rem, 8vw, 6.2rem); line-height: .9; letter-spacing: -.05em;
     margin-bottom: 8px;
   }
   .hero-zh {
     font-family: "Noto Serif TC", "Songti TC", Georgia, serif;
-    font-size: clamp(1.1rem, 2.4vw, 1.7rem); color: var(--muted); margin-bottom: 28px;
+    font-size: clamp(1rem, 2vw, 1.35rem); color: var(--muted); margin-bottom: 28px;
   }
   .hero-date { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
   .hero-date span {
@@ -1285,16 +1266,16 @@ const styles = `
     width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
     background: var(--hanada-soft); color: var(--hanada);
   }
-  .transport-label { display: flex; gap: 6px; color: var(--muted); font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+  .transport-label { display: flex; gap: 6px; color: var(--muted); font-size: .74rem; font-weight: 800; text-transform: uppercase; }
   .transport-card strong { display: block; margin: 3px 0; font-size: .92rem; }
-  .transport-sub { display: flex; flex-direction: column; font-size: .72rem; color: var(--muted); line-height: 1.35; }
+  .transport-sub { display: flex; flex-direction: column; font-size: .84rem; color: var(--muted); line-height: 1.35; }
 
   .quick-facts {
     max-width: var(--max); margin: 18px auto 0; padding: 0 clamp(16px, 4vw, 40px);
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
   }
   .quick-facts article {
-    background: rgba(255,255,255,.5); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+    background: rgba(255,255,255,.5); border: 1px solid var(--line); border-radius: 16px; padding: 16px;
   }
   .quick-facts strong { display: block; color: var(--ai); font-size: 1.45rem; margin-bottom: 4px; }
 
@@ -1308,8 +1289,8 @@ const styles = `
     background: white; color: var(--beni);
   }
   .return-alert strong, .return-alert > div > span { display: block; }
-  .return-alert > div > span { color: #765957; font-size: .8rem; margin: 2px 0 8px; }
-  .return-alert p { margin: 2px 0; font-size: .8rem; line-height: 1.45; color: #5f4b49; }
+  .return-alert > div > span { color: #765957; font-size: .86rem; margin: 2px 0 8px; }
+  .return-alert p { margin: 2px 0; font-size: .86rem; line-height: 1.45; color: #5f4b49; }
 
   .day-section {
     max-width: var(--max); margin: 0 auto; padding: 90px clamp(16px, 4vw, 40px) 20px;
@@ -1326,13 +1307,13 @@ const styles = `
   .accent-beni { --accent: var(--beni); --accent-soft: var(--beni-soft); }
   .accent-matcha { --accent: #68887B; --accent-soft: var(--matcha-soft); }
 
-  .date-line { display: flex; flex-wrap: wrap; gap: 9px; color: var(--accent); font-size: .73rem; font-weight: 900; letter-spacing: .1em; }
+  .date-line { display: flex; flex-wrap: wrap; gap: 9px; color: var(--accent); font-size: .79rem; font-weight: 900; letter-spacing: .1em; }
   .day-heading h2 {
     font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 4.5vw, 4rem);
     line-height: 1; letter-spacing: -.035em; margin: 8px 0 4px;
   }
   .day-title-zh { color: var(--muted); font-size: 1rem; margin-bottom: 14px; }
-  .day-summary { display: flex; flex-direction: column; gap: 3px; max-width: 760px; font-size: .88rem; line-height: 1.45; }
+  .day-summary { display: flex; flex-direction: column; gap: 3px; max-width: 760px; font-size: .94rem; line-height: 1.5; }
   .day-summary span:last-child { color: var(--muted); }
 
   .filter-button {
@@ -1352,7 +1333,7 @@ const styles = `
     display: grid; grid-template-columns: 108px 48px minmax(0,1fr); align-items: start; min-height: 88px;
   }
   .time-cell { padding-top: 13px; text-align: right; position: relative; }
-  .time-cell time { font-size: .75rem; font-weight: 850; color: var(--accent); }
+  .time-cell time { font-size: .82rem; font-weight: 850; color: var(--accent); }
   .fixed-dot {
     display: inline-block; width: 7px; height: 7px; border-radius: 50%;
     background: var(--beni); margin-left: 7px;
@@ -1381,24 +1362,24 @@ const styles = `
   }
   .timeline-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
   .type-label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .type-label .bi { flex-direction: row; gap: 5px; color: var(--muted); font-size: .64rem; font-weight: 850; text-transform: uppercase; letter-spacing: .05em; }
+  .type-label .bi { flex-direction: row; gap: 5px; color: var(--muted); font-size: .78rem; font-weight: 850; text-transform: uppercase; letter-spacing: .05em; }
   .type-label .bi .zh { color: var(--muted); font-size: 1em; }
   .fixed-badge {
     padding: 3px 6px; border-radius: 999px; background: var(--beni-soft); color: var(--beni);
-    font-size: .58rem; font-weight: 900; letter-spacing: .04em;
+    font-size: .66rem; font-weight: 900; letter-spacing: .04em;
   }
-  .timeline-card h3 { font-size: .98rem; margin-bottom: 2px; }
-  .timeline-card h3 + p { margin: 0; color: var(--muted); font-size: .78rem; }
+  .timeline-card h3 { font-size: 1.04rem; margin-bottom: 2px; }
+  .timeline-card h3 + p { margin: 0; color: var(--muted); font-size: .84rem; }
   .timeline-detail {
     display: flex; flex-direction: column; gap: 2px; margin-top: 10px;
-    padding-top: 9px; border-top: 1px solid #ebe7dd; font-size: .76rem; line-height: 1.35;
+    padding-top: 9px; border-top: 1px solid #ebe7dd; font-size: .84rem; line-height: 1.4;
   }
   .timeline-detail span:last-child { color: var(--muted); }
   .timeline-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .map-button, .mini-map {
     display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
     color: var(--hanada); background: var(--hanada-soft); border-radius: 10px;
-    padding: 9px 11px; font-size: .72rem; font-weight: 850;
+    padding: 9px 11px; font-size: .78rem; font-weight: 850;
   }
   .map-button.compact { width: 34px; height: 34px; padding: 0; justify-content: center; }
   .mini-map { padding: 7px 8px; }
@@ -1409,9 +1390,9 @@ const styles = `
   .priority-box { border-radius: 17px; padding: 18px; border: 1px solid var(--line); background: white; }
   .priority-box.keep { border-top: 5px solid var(--accent); }
   .priority-box.cut { border-top: 5px solid var(--beni); }
-  .priority-kicker { font-size: .65rem; font-weight: 900; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+  .priority-kicker { font-size: .72rem; font-weight: 900; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
   .priority-box ul { margin: 0; padding-left: 1.05rem; }
-  .priority-box li { padding: 5px 0; font-size: .78rem; line-height: 1.35; }
+  .priority-box li { padding: 5px 0; font-size: .84rem; line-height: 1.35; }
 
   .checklist-section, .packing-section {
     max-width: var(--max); margin: 0 auto; padding: 90px clamp(16px, 4vw, 40px) 20px;
@@ -1428,7 +1409,7 @@ const styles = `
   }
   .checklist-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
   .checklist-top strong { display: block; font-size: 2rem; }
-  .checklist-top span { color: rgba(255,255,255,.72); font-size: .78rem; }
+  .checklist-top span { color: rgba(255,255,255,.72); font-size: .84rem; }
   .checklist-top button {
     color: white; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.24);
     padding: 8px 11px; border-radius: 10px; cursor: pointer;
@@ -1448,7 +1429,7 @@ const styles = `
     display: grid; place-items: center; flex: 0 0 auto; color: transparent;
   }
   .checklist-grid input:checked + .check-box { background: white; color: var(--ai); border-color: white; }
-  .checklist-grid .bi { font-size: .8rem; }
+  .checklist-grid .bi { font-size: .86rem; }
   .checklist-grid .bi .zh { color: rgba(255,255,255,.68); }
 
   .packing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
@@ -1458,9 +1439,9 @@ const styles = `
     border-radius: 12px; background: var(--hanada-soft); color: var(--hanada); margin-bottom: 15px;
   }
   .packing-grid h3 { margin-bottom: 2px; }
-  .packing-grid h3 + p { color: var(--muted); font-size: .78rem; }
+  .packing-grid h3 + p { color: var(--muted); font-size: .84rem; }
   .packing-grid ul { margin: 14px 0 0; padding-left: 1.05rem; }
-  .packing-grid li { padding: 5px 0; font-size: .8rem; }
+  .packing-grid li { padding: 5px 0; font-size: .86rem; }
   .rules-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 15px; }
   .rules-row > div {
     display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: start;
@@ -1475,7 +1456,7 @@ const styles = `
     padding: 11px 14px; box-shadow: 0 16px 34px rgba(0,0,0,.18);
   }
   .floating-map strong, .floating-map small { display: block; }
-  .floating-map strong { font-size: .78rem; }
+  .floating-map strong { font-size: .84rem; }
   .floating-map small { color: rgba(255,255,255,.65); font-size: .64rem; margin-top: 2px; }
 
   footer {
@@ -1520,34 +1501,48 @@ const styles = `
     html { scroll-padding-top: 72px; }
 
     .hero { padding: 48px 16px 38px; min-height: auto; }
-    .hero h1 { font-size: 4.5rem; }
-    .hero-art { min-height: 300px; border-radius: 28px; border-width: 7px; }
+    .hero h1 { font-size: 3.8rem; }
+    .hero-art { min-height: 270px; border-radius: 24px; border-width: 6px; }
     .hero-sun { width: 92px; height: 92px; }
     .hero-stamp { width: 88px; left: 18px; bottom: 18px; }
 
     .transport-strip, .quick-facts { padding-inline: 14px; }
-    .quick-facts { grid-template-columns: 1fr 1fr; }
+    .quick-facts { grid-template-columns: 1fr 1fr; gap: 10px; }
     .return-alert { margin-inline: 14px; }
 
     .day-section, .checklist-section, .packing-section { padding-inline: 14px; padding-top: 68px; }
     .day-header { grid-template-columns: 1fr; gap: 14px; }
-    .day-number { font-size: 4.5rem; }
+    .day-number { font-size: 3.8rem; }
     .filter-button { grid-column: auto; }
     .timeline::before { left: 17px; }
-    .timeline-item { grid-template-columns: 36px minmax(0,1fr); grid-template-areas: "rail card" "time card"; min-height: 108px; }
-    .time-cell {
-      grid-area: time; text-align: left; padding-top: 0; writing-mode: vertical-rl;
-      transform: rotate(180deg); display: flex; align-items: center; justify-content: flex-end;
+    .timeline::before { left: 15px; }
+    .timeline-item {
+      grid-template-columns: 32px minmax(0,1fr);
+      grid-template-areas:
+        "rail time"
+        "rail card";
+      min-height: 118px;
+      column-gap: 8px;
     }
-    .time-cell time { font-size: .64rem; }
-    .fixed-dot { display: none; }
+    .time-cell {
+      grid-area: time;
+      text-align: left;
+      padding: 2px 0 7px;
+      writing-mode: horizontal-tb;
+      transform: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .time-cell time { font-size: .78rem; }
+    .fixed-dot { display: inline-block; }
     .timeline-rail { grid-area: rail; justify-content: flex-start; }
-    .timeline-card { grid-area: card; }
+    .timeline-card { grid-area: card; margin-bottom: 16px; }
     .timeline-main { gap: 8px; }
     .timeline-actions { flex-direction: column; align-items: flex-end; }
-    .timeline-card h3 { font-size: .92rem; }
+    .timeline-card h3 { font-size: 1rem; }
 
-    .section-index { font-size: 3.6rem; }
+    .section-index { font-size: 3rem; }
     .rules-row > div { grid-template-columns: 1fr; gap: 7px; }
 
     .floating-map { right: 10px; bottom: 10px; padding: 10px 12px; }
